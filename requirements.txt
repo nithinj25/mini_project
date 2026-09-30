@@ -1,0 +1,5 @@
+# Tested: torch 2.11.0+cu128, transformers 5.17.0, RTX 4060 Laptop (8 GB), Python 3.12
+torch>=2.3
+transformers>=4.56
+accelerate
+nvidia-ml-py

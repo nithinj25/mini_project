@@ -1,0 +1,57 @@
+{
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "capability": [
+    8,
+    9
+  ],
+  "dtype": "fp16",
+  "torch": "2.11.0+cu128",
+  "transformers": "5.17.0",
+  "arch": {
+    "target": {
+      "layers": 36,
+      "kv_heads": 2,
+      "head_dim": 128,
+      "vocab_rows": 151936
+    },
+    "draft": {
+      "layers": 24,
+      "kv_heads": 2,
+      "head_dim": 64,
+      "vocab_rows": 151936
+    }
+  },
+  "weights_gb": 6.668766021728516,
+  "sanity_text": "A hash table is a data structure that uses a hash function to map keys to values, allowing for efficient insertion, deletion, and retrieval operations, typically with an average time complexity of O(1).",
+  "c_runs": [
+    {
+      "c": 0.7012461773705357,
+      "target_step_ms": 52.31999999996333,
+      "draft_step_ms": 36.68920000000071
+    },
+    {
+      "c": 0.6605463236329286,
+      "target_step_ms": 57.307789999867964,
+      "draft_step_ms": 37.8544499999407
+    },
+    {
+      "c": 0.7174375915220275,
+      "target_step_ms": 54.26425999994535,
+      "draft_step_ms": 38.93122000008589
+    }
+  ],
+  "c_mean": 0.6930766975084973,
+  "c_std": 0.02931227373336109,
+  "baseline_tokens_per_s_mean": 17.50911111111111,
+  "baseline_tokens_per_s_std": 0.3713476957126717,
+  "baseline_ttft_ms_mean": 65.25222222222222,
+  "baseline_ttft_ms_std": 2.6218780376753688,
+  "peak_mem_gb": 6.708019733428955,
+  "predicted_best_gamma": {
+    "0.5": 1,
+    "0.6": 1,
+    "0.7": 1,
+    "0.8": 1,
+    "0.9": 2
+  }
+}

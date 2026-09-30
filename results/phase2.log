@@ -1,0 +1,63 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:   2%|▏         | 9/434 [00:00<00:07, 56.81it/s]Loading weights:   4%|▎         | 16/434 [00:00<00:06, 61.30it/s]Loading weights:   5%|▌         | 23/434 [00:00<00:09, 42.94it/s]Loading weights:   8%|▊         | 33/434 [00:00<00:09, 41.70it/s]Loading weights:  10%|█         | 45/434 [00:00<00:06, 57.04it/s]Loading weights:  12%|█▏        | 52/434 [00:01<00:07, 52.85it/s]Loading weights:  14%|█▎        | 59/434 [00:01<00:07, 49.89it/s]Loading weights:  15%|█▍        | 65/434 [00:01<00:07, 50.87it/s]Loading weights:  16%|█▋        | 71/434 [00:01<00:07, 46.38it/s]Loading weights:  18%|█▊        | 76/434 [00:01<00:08, 44.47it/s]Loading weights:  19%|█▉        | 83/434 [00:01<00:07, 45.27it/s]Loading weights:  21%|██        | 89/434 [00:01<00:07, 46.31it/s]Loading weights:  22%|██▏       | 95/434 [00:01<00:07, 46.77it/s]Loading weights:  23%|██▎       | 100/434 [00:02<00:07, 45.97it/s]Loading weights:  25%|██▍       | 107/434 [00:02<00:08, 39.35it/s]Loading weights:  27%|██▋       | 119/434 [00:02<00:06, 49.11it/s]Loading weights:  29%|██▉       | 125/434 [00:02<00:06, 50.10it/s]Loading weights:  30%|███       | 132/434 [00:02<00:05, 52.13it/s]Loading weights:  32%|███▏      | 138/434 [00:02<00:05, 50.90it/s]Loading weights:  33%|███▎      | 144/434 [00:02<00:05, 51.07it/s]Loading weights:  35%|███▍      | 150/434 [00:03<00:05, 49.69it/s]Loading weights:  36%|███▌      | 156/434 [00:03<00:05, 47.23it/s]Loading weights:  37%|███▋      | 161/434 [00:03<00:06, 44.66it/s]Loading weights:  39%|███▊      | 168/434 [00:03<00:06, 40.63it/s]Loading weights:  41%|████      | 177/434 [00:03<00:06, 37.25it/s]Loading weights:  44%|████▍     | 191/434 [00:04<00:05, 42.11it/s]Loading weights:  46%|████▋     | 201/434 [00:04<00:05, 40.93it/s]Loading weights:  50%|████▉     | 215/434 [00:04<00:04, 54.56it/s]Loading weights:  51%|█████     | 222/434 [00:04<00:04, 47.74it/s]Loading weights:  53%|█████▎    | 228/434 [00:04<00:04, 42.74it/s]Loading weights:  55%|█████▍    | 238/434 [00:05<00:03, 49.55it/s]Loading weights:  56%|█████▌    | 244/434 [00:05<00:04, 44.21it/s]Loading weights:  58%|█████▊    | 251/434 [00:05<00:04, 40.16it/s]Loading weights:  60%|█████▉    | 260/434 [00:05<00:03, 47.27it/s]Loading weights:  61%|██████▏   | 266/434 [00:05<00:03, 45.95it/s]Loading weights:  63%|██████▎   | 273/434 [00:05<00:04, 38.95it/s]Loading weights:  66%|██████▌   | 285/434 [00:06<00:02, 52.25it/s]Loading weights:  67%|██████▋   | 292/434 [00:06<00:02, 48.27it/s]Loading weights:  69%|██████▉   | 299/434 [00:06<00:03, 41.53it/s]Loading weights:  70%|███████   | 304/434 [00:06<00:03, 41.45it/s]Loading weights:  72%|███████▏  | 312/434 [00:06<00:03, 40.03it/s]Loading weights:  73%|███████▎  | 317/434 [00:06<00:02, 41.68it/s]Loading weights:  74%|███████▍  | 323/434 [00:07<00:02, 37.60it/s]Loading weights:  77%|███████▋  | 335/434 [00:07<00:01, 52.16it/s]Loading weights:  79%|███████▊  | 341/434 [00:07<00:02, 43.44it/s]Loading weights:  80%|███████▉  | 347/434 [00:07<00:02, 39.14it/s]Loading weights:  83%|████████▎ | 359/434 [00:07<00:01, 51.00it/s]Loading weights:  84%|████████▍ | 365/434 [00:07<00:01, 44.28it/s]Loading weights:  85%|████████▌ | 371/434 [00:08<00:01, 44.41it/s]Loading weights:  87%|████████▋ | 376/434 [00:08<00:01, 42.23it/s]Loading weights:  88%|████████▊ | 383/434 [00:08<00:01, 39.35it/s]Loading weights:  91%|█████████ | 395/434 [00:08<00:00, 53.25it/s]Loading weights:  92%|█████████▏| 401/434 [00:08<00:00, 45.40it/s]Loading weights:  94%|█████████▍| 407/434 [00:08<00:00, 40.46it/s]Loading weights:  95%|█████████▌| 413/434 [00:09<00:00, 43.81it/s]Loading weights:  96%|█████████▋| 418/434 [00:09<00:00, 42.30it/s]Loading weights:  97%|█████████▋| 423/434 [00:09<00:00, 39.77it/s]Loading weights: 100%|██████████| 434/434 [00:09<00:00, 46.28it/s]
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:00<00:56,  5.10it/s]Loading weights:  13%|█▎        | 39/290 [00:00<00:01, 162.08it/s]Loading weights:  22%|██▏       | 64/290 [00:00<00:01, 193.67it/s]Loading weights:  31%|███       | 89/290 [00:00<00:00, 210.43it/s]Loading weights:  41%|████      | 119/290 [00:00<00:00, 214.93it/s]Loading weights:  50%|█████     | 145/290 [00:00<00:00, 225.32it/s]Loading weights:  59%|█████▉    | 171/290 [00:00<00:00, 231.01it/s]Loading weights:  70%|███████   | 203/290 [00:00<00:00, 248.17it/s]Loading weights:  79%|███████▉  | 229/290 [00:01<00:00, 244.84it/s]Loading weights:  88%|████████▊ | 254/290 [00:01<00:00, 237.48it/s]Loading weights:  97%|█████████▋| 281/290 [00:01<00:00, 245.38it/s]Loading weights: 100%|██████████| 290/290 [00:01<00:00, 224.60it/s]
+code p0 gamma=1  alpha=0.829   21.16 tok/s (base 18.14)  MATCH
+code p0 gamma=4  alpha=0.878   18.19 tok/s (base 18.14)  MATCH
+code p0 gamma=8  alpha=0.898   16.37 tok/s (base 18.14)  MATCH
+  sample [code]: "Certainly! Below is a Python function that calculates the n-th Fibonacci number using memoization to improve efficiency. I've also included a docstring to descr"
+code p1 gamma=1  alpha=0.954   21.59 tok/s (base 17.67)  MATCH
+code p1 gamma=4  alpha=0.971   22.52 tok/s (base 17.67)  MATCH
+code p1 gamma=8  alpha=0.966   23.04 tok/s (base 17.67)  MATCH
+code p2 gamma=1  alpha=0.954   22.96 tok/s (base 17.85)  MATCH
+code p2 gamma=4  alpha=0.952   21.85 tok/s (base 17.85)  MATCH
+code p2 gamma=8  alpha=0.966   22.52 tok/s (base 17.85)  MATCH
+code p3 gamma=1  alpha=0.895   22.30 tok/s (base 18.13)  MATCH
+code p3 gamma=4  alpha=0.872   19.64 tok/s (base 18.13)  MATCH
+code p3 gamma=8  alpha=0.891   16.32 tok/s (base 18.13)  MATCH
+code p4 gamma=1  alpha=0.803   21.09 tok/s (base 17.90)  MATCH
+code p4 gamma=4  alpha=0.826   16.72 tok/s (base 17.90)  MATCH
+code p4 gamma=8  alpha=0.833   12.77 tok/s (base 17.90)  MATCH
+code p5 gamma=1  alpha=0.924   22.34 tok/s (base 17.71)  MATCH
+code p5 gamma=4  alpha=0.915   20.73 tok/s (base 17.71)  MATCH
+code p5 gamma=8  alpha=0.915   17.41 tok/s (base 17.71)  MATCH
+math p0 gamma=1  alpha=0.939   22.21 tok/s (base 16.92)  MATCH
+math p0 gamma=4  alpha=0.962   23.01 tok/s (base 16.92)  MATCH
+math p0 gamma=8  alpha=0.965   21.33 tok/s (base 16.92)  MATCH
+  sample [math]: "Certainly! Let's solve the equation \\(3x + 7 = 22\\) step by step.\n\n### Step 1: Subtract 7 from both sides of the equation.\nThis step is done to isolate the term"
+math p1 gamma=1  alpha=0.924   22.56 tok/s (base 16.64)  MATCH
+math p1 gamma=4  alpha=0.934   22.04 tok/s (base 16.64)  MATCH
+math p1 gamma=8  alpha=0.948   19.72 tok/s (base 16.64)  MATCH
+math p2 gamma=1  alpha=0.910   21.02 tok/s (base 17.51)  MATCH
+math p2 gamma=4  alpha=0.933   21.67 tok/s (base 17.51)  MATCH
+math p2 gamma=8  alpha=0.922   17.59 tok/s (base 17.51)  MATCH
+math p3 gamma=1  alpha=0.939   21.84 tok/s (base 18.17)  MATCH
+math p3 gamma=4  alpha=0.924   18.55 tok/s (base 18.17)  MATCH
+math p3 gamma=8  alpha=0.932   19.04 tok/s (base 18.17)  MATCH
+math p4 gamma=1  alpha=0.910   22.42 tok/s (base 17.75)  MATCH
+math p4 gamma=4  alpha=0.933   19.92 tok/s (base 17.75)  MATCH
+math p4 gamma=8  alpha=0.932   19.67 tok/s (base 17.75)  MATCH
+math p5 gamma=1  alpha=0.969   23.46 tok/s (base 18.42)  MATCH
+math p5 gamma=4  alpha=0.981   24.09 tok/s (base 18.42)  MATCH
+math p5 gamma=8  alpha=0.983   22.15 tok/s (base 18.42)  MATCH
+chat p0 gamma=1  alpha=0.868   22.43 tok/s (base 18.08)  MATCH
+chat p0 gamma=4  alpha=0.765   16.10 tok/s (base 18.08)  MATCH
+chat p0 gamma=8  alpha=0.779   10.61 tok/s (base 18.08)  MATCH
+  sample [chat]: "The sky appears blue during the day due to a phenomenon called Rayleigh scattering. This is a result of the scattering of sunlight by molecules in the Earth's a"
+chat p1 gamma=1  alpha=0.684   18.45 tok/s (base 17.20)  DIFF@33 gap=0.0156 ranks=1/0
+chat p1 gamma=4  alpha=0.726   12.59 tok/s (base 17.20)  DIFF@33 gap=0.0156 ranks=1/0
+chat p1 gamma=8  alpha=0.805   11.81 tok/s (base 17.20)  MATCH
+chat p2 gamma=1  alpha=0.649   19.04 tok/s (base 17.70)  MATCH
+chat p2 gamma=4  alpha=0.675   12.27 tok/s (base 17.70)  MATCH
+chat p2 gamma=8  alpha=0.672    8.24 tok/s (base 17.70)  MATCH
+chat p3 gamma=1  alpha=0.703   18.29 tok/s (base 17.19)  MATCH
+chat p3 gamma=4  alpha=0.741   14.20 tok/s (base 17.19)  MATCH
+chat p3 gamma=8  alpha=0.712    8.91 tok/s (base 17.19)  MATCH
+chat p4 gamma=1  alpha=0.649   18.55 tok/s (base 16.59)  MATCH
+chat p4 gamma=4  alpha=0.698   13.41 tok/s (base 16.59)  MATCH
+chat p4 gamma=8  alpha=0.685    8.24 tok/s (base 16.59)  MATCH
+chat p5 gamma=1  alpha=0.753   19.61 tok/s (base 17.50)  DIFF@19 gap=0.0312 ranks=1/0
+chat p5 gamma=4  alpha=0.737   14.36 tok/s (base 17.50)  DIFF@19 gap=0.0312 ranks=1/0
+chat p5 gamma=8  alpha=0.722    9.80 tok/s (base 17.50)  DIFF@19 gap=0.0312 ranks=1/0
+
+49/54 greedy runs match baseline; 5 mismatches, 0 not explained as near-ties
+alpha by task: {'code': 0.9023, 'math': 0.9411, 'chat': 0.7236}
