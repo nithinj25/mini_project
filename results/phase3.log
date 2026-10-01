@@ -1,0 +1,158 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:   0%|          | 1/434 [00:00<03:29,  2.07it/s]Loading weights:   5%|▍         | 20/434 [00:00<00:09, 44.45it/s]Loading weights:   7%|▋         | 31/434 [00:00<00:07, 51.54it/s]Loading weights:   9%|▉         | 40/434 [00:00<00:08, 49.22it/s]Loading weights:  11%|█         | 48/434 [00:01<00:08, 44.58it/s]Loading weights:  14%|█▎        | 59/434 [00:01<00:06, 56.82it/s]Loading weights:  15%|█▌        | 67/434 [00:01<00:06, 55.21it/s]Loading weights:  17%|█▋        | 74/434 [00:01<00:07, 49.39it/s]Loading weights:  19%|█▊        | 81/434 [00:01<00:06, 53.08it/s]Loading weights:  20%|██        | 88/434 [00:01<00:06, 49.55it/s]Loading weights:  22%|██▏       | 95/434 [00:02<00:06, 50.75it/s]Loading weights:  23%|██▎       | 101/434 [00:02<00:06, 50.57it/s]Loading weights:  25%|██▍       | 107/434 [00:02<00:06, 50.46it/s]Loading weights:  26%|██▌       | 113/434 [00:02<00:06, 52.15it/s]Loading weights:  27%|██▋       | 119/434 [00:02<00:06, 51.86it/s]Loading weights:  29%|██▉       | 125/434 [00:02<00:05, 52.53it/s]Loading weights:  30%|███       | 131/434 [00:02<00:06, 44.09it/s]Loading weights:  33%|███▎      | 143/434 [00:03<00:06, 48.02it/s]Loading weights:  35%|███▌      | 153/434 [00:03<00:06, 45.83it/s]Loading weights:  38%|███▊      | 165/434 [00:03<00:04, 58.30it/s]Loading weights:  40%|███▉      | 172/434 [00:03<00:04, 54.55it/s]Loading weights:  41%|████      | 179/434 [00:03<00:04, 53.53it/s]Loading weights:  43%|████▎     | 185/434 [00:03<00:04, 53.74it/s]Loading weights:  44%|████▍     | 192/434 [00:03<00:05, 47.18it/s]Loading weights:  47%|████▋     | 203/434 [00:04<00:04, 47.09it/s]Loading weights:  49%|████▉     | 212/434 [00:04<00:05, 42.75it/s]Loading weights:  52%|█████▏    | 227/434 [00:04<00:04, 49.08it/s]Loading weights:  55%|█████▌    | 239/434 [00:04<00:03, 49.46it/s]Loading weights:  58%|█████▊    | 251/434 [00:05<00:03, 50.29it/s]Loading weights:  60%|██████    | 261/434 [00:05<00:03, 48.78it/s]Loading weights:  62%|██████▏   | 271/434 [00:05<00:02, 56.29it/s]Loading weights:  64%|██████▍   | 278/434 [00:05<00:02, 56.43it/s]Loading weights:  66%|██████▋   | 288/434 [00:05<00:02, 59.01it/s]Loading weights:  68%|██████▊   | 295/434 [00:05<00:02, 60.46it/s]Loading weights:  70%|██████▉   | 302/434 [00:06<00:02, 53.39it/s]Loading weights:  72%|███████▏  | 311/434 [00:06<00:02, 54.02it/s]Loading weights:  73%|███████▎  | 317/434 [00:06<00:02, 53.97it/s]Loading weights:  75%|███████▍  | 324/434 [00:06<00:02, 49.45it/s]Loading weights:  77%|███████▋  | 333/434 [00:06<00:02, 44.08it/s]Loading weights:  80%|███████▉  | 347/434 [00:06<00:01, 47.83it/s]Loading weights:  83%|████████▎ | 359/434 [00:07<00:01, 48.29it/s]Loading weights:  85%|████████▌ | 370/434 [00:07<00:01, 56.25it/s]Loading weights:  87%|████████▋ | 377/434 [00:07<00:01, 50.21it/s]Loading weights:  88%|████████▊ | 383/434 [00:07<00:01, 50.04it/s]Loading weights:  90%|████████▉ | 389/434 [00:07<00:00, 47.45it/s]Loading weights:  91%|█████████ | 394/434 [00:08<00:00, 40.01it/s]Loading weights:  92%|█████████▏| 401/434 [00:08<00:00, 45.29it/s]Loading weights:  94%|█████████▍| 407/434 [00:08<00:00, 40.44it/s]Loading weights:  97%|█████████▋| 419/434 [00:08<00:00, 42.72it/s]Loading weights: 100%|██████████| 434/434 [00:08<00:00, 50.20it/s]
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:00<00:34,  8.38it/s]Loading weights:  13%|█▎        | 39/290 [00:00<00:01, 200.82it/s]Loading weights:  24%|██▍       | 70/290 [00:00<00:00, 237.12it/s]Loading weights:  33%|███▎      | 95/290 [00:00<00:00, 227.33it/s]Loading weights:  42%|████▏     | 123/290 [00:00<00:00, 239.97it/s]Loading weights:  53%|█████▎    | 155/290 [00:00<00:00, 242.53it/s]Loading weights:  64%|██████▍   | 185/290 [00:00<00:00, 256.32it/s]Loading weights:  74%|███████▍  | 214/290 [00:00<00:00, 259.68it/s]Loading weights:  83%|████████▎ | 241/290 [00:01<00:00, 243.45it/s]Loading weights:  92%|█████████▏| 268/290 [00:01<00:00, 247.22it/s]Loading weights: 100%|██████████| 290/290 [00:01<00:00, 242.31it/s]
+gpu=NVIDIA GeForce RTX 4060 Laptop GPU dtype=fp16 c=0.7337 -> results/results.csv
+code  p0 T=0.0  baseline      16.9 tok/s x1.00 (pred 1.0) alpha= match=True
+code  p0 T=0.0  fixed:1       19.2 tok/s x1.14 (pred 1.0547) alpha=0.8286 match=True
+code  p0 T=0.0  fixed:2       19.1 tok/s x1.14 (pred 1.0961) alpha=0.8977 match=True
+code  p0 T=0.0  fixed:3       16.9 tok/s x1.00 (pred 1.0129) alpha=0.8614 match=True
+code  p0 T=0.0  fixed:4       17.2 tok/s x1.02 (pred 0.9998) alpha=0.8785 match=True
+code  p0 T=0.0  fixed:6       17.9 tok/s x1.06 (pred 0.9817) alpha=0.9027 match=True
+code  p0 T=0.0  fixed:8       15.6 tok/s x0.93 (pred 0.8878) alpha=0.8983 match=True
+code  p0 T=0.7  baseline      17.2 tok/s x1.00 (pred 1.0) alpha= match=
+code  p0 T=0.7  fixed:1       20.1 tok/s x1.17 (pred 1.0857) alpha=0.8824 match=
+code  p0 T=0.7  fixed:2       19.8 tok/s x1.15 (pred 1.0848) alpha=0.8876 match=
+code  p0 T=0.7  fixed:3       18.8 tok/s x1.09 (pred 1.0021) alpha=0.8544 match=
+code  p0 T=0.7  fixed:4       17.5 tok/s x1.02 (pred 0.9813) alpha=0.8704 match=
+code  p0 T=0.7  fixed:6       19.1 tok/s x1.12 (pred 1.083) alpha=0.9375 match=
+code  p0 T=0.7  fixed:8       18.0 tok/s x1.05 (pred 0.9549) alpha=0.9153 match=
+code  p1 T=0.0  baseline      17.8 tok/s x1.00 (pred 1.0) alpha= match=True
+code  p1 T=0.0  fixed:1       22.5 tok/s x1.27 (pred 1.1261) alpha=0.9538 match=True
+code  p1 T=0.0  fixed:2       23.1 tok/s x1.30 (pred 1.1871) alpha=0.9767 match=True
+code  p1 T=0.0  fixed:3       22.7 tok/s x1.28 (pred 1.175) alpha=0.9592 match=True
+code  p1 T=0.0  fixed:4       22.6 tok/s x1.27 (pred 1.1989) alpha=0.9709 match=True
+code  p1 T=0.0  fixed:6       22.4 tok/s x1.26 (pred 1.1957) alpha=0.973 match=True
+code  p1 T=0.0  fixed:8       22.0 tok/s x1.24 (pred 1.1467) alpha=0.9655 match=True
+code  p1 T=0.7  baseline      17.2 tok/s x1.00 (pred 1.0) alpha= match=
+code  p1 T=0.7  fixed:1       21.0 tok/s x1.22 (pred 1.1261) alpha=0.9538 match=
+code  p1 T=0.7  fixed:2       21.0 tok/s x1.23 (pred 1.1227) alpha=0.9213 match=
+code  p1 T=0.7  fixed:3       20.1 tok/s x1.17 (pred 1.0616) alpha=0.8911 match=
+code  p1 T=0.7  fixed:4       21.7 tok/s x1.26 (pred 1.1561) alpha=0.9524 match=
+code  p1 T=0.7  fixed:6       17.1 tok/s x1.00 (pred 0.9604) alpha=0.8947 match=
+code  p1 T=0.7  fixed:8       16.3 tok/s x0.95 (pred 0.9209) alpha=0.9068 match=
+code  p2 T=0.0  baseline      17.5 tok/s x1.00 (pred 1.0) alpha= match=True
+code  p2 T=0.0  fixed:1       21.7 tok/s x1.24 (pred 1.1261) alpha=0.9538 match=True
+code  p2 T=0.0  fixed:2       22.7 tok/s x1.29 (pred 1.1871) alpha=0.9767 match=True
+code  p2 T=0.0  fixed:3       22.0 tok/s x1.25 (pred 1.1575) alpha=0.949 match=True
+code  p2 T=0.0  fixed:4       21.3 tok/s x1.21 (pred 1.1553) alpha=0.9524 match=True
+code  p2 T=0.0  fixed:6       20.0 tok/s x1.14 (pred 1.107) alpha=0.9464 match=True
+code  p2 T=0.0  fixed:8       21.3 tok/s x1.22 (pred 1.1467) alpha=0.9655 match=True
+code  p2 T=0.7  baseline      16.1 tok/s x1.00 (pred 1.0) alpha= match=
+code  p2 T=0.7  fixed:1       21.5 tok/s x1.34 (pred 1.1186) alpha=0.9394 match=
+code  p2 T=0.7  fixed:2       20.6 tok/s x1.28 (pred 1.0858) alpha=0.8889 match=
+code  p2 T=0.7  fixed:3       23.3 tok/s x1.45 (pred 1.1411) alpha=0.9394 match=
+code  p2 T=0.7  fixed:4       19.4 tok/s x1.20 (pred 1.0363) alpha=0.8962 match=
+code  p2 T=0.7  fixed:6       20.3 tok/s x1.26 (pred 1.0819) alpha=0.9375 match=
+code  p2 T=0.7  fixed:8       18.8 tok/s x1.17 (pred 0.9581) alpha=0.9153 match=
+code  p3 T=0.0  baseline      17.5 tok/s x1.00 (pred 1.0) alpha= match=True
+code  p3 T=0.0  fixed:1       20.5 tok/s x1.17 (pred 1.0929) alpha=0.8955 match=True
+code  p3 T=0.0  fixed:2       18.9 tok/s x1.08 (pred 1.0852) alpha=0.8876 match=True
+code  p3 T=0.0  fixed:3       19.2 tok/s x1.10 (pred 1.0625) alpha=0.8911 match=True
+code  p3 T=0.0  fixed:4       17.6 tok/s x1.00 (pred 0.9892) alpha=0.8716 match=True
+code  p3 T=0.0  fixed:6       17.2 tok/s x0.98 (pred 0.9784) alpha=0.9035 match=True
+code  p3 T=0.0  fixed:8       16.2 tok/s x0.92 (pred 0.8655) alpha=0.8908 match=True
+code  p3 T=0.7  baseline      17.9 tok/s x1.00 (pred 1.0) alpha= match=
+code  p3 T=0.7  fixed:1       21.6 tok/s x1.21 (pred 1.1019) alpha=0.9104 match=
+code  p3 T=0.7  fixed:2       20.7 tok/s x1.16 (pred 1.0632) alpha=0.8681 match=
+code  p3 T=0.7  fixed:3       18.3 tok/s x1.03 (pred 0.991) alpha=0.8462 match=
+code  p3 T=0.7  fixed:4       18.3 tok/s x1.02 (pred 0.9717) alpha=0.8624 match=
+code  p3 T=0.7  fixed:6       13.9 tok/s x0.78 (pred 0.7945) alpha=0.8305 match=
+code  p3 T=0.7  fixed:8       14.7 tok/s x0.82 (pred 0.8144) alpha=0.875 match=
+code  p4 T=0.0  baseline      16.8 tok/s x1.00 (pred 1.0) alpha= match=True
+code  p4 T=0.0  fixed:1       19.1 tok/s x1.13 (pred 1.0399) alpha=0.8028 match=True
+code  p4 T=0.0  fixed:2       16.8 tok/s x0.99 (pred 0.989) alpha=0.7979 match=True
+code  p4 T=0.0  fixed:3       16.2 tok/s x0.96 (pred 0.9588) alpha=0.8235 match=True
+code  p4 T=0.0  fixed:4       15.5 tok/s x0.92 (pred 0.9032) alpha=0.8257 match=True
+code  p4 T=0.0  fixed:6       13.8 tok/s x0.82 (pred 0.7798) alpha=0.819 match=True
+code  p4 T=0.0  fixed:8       12.8 tok/s x0.76 (pred 0.7121) alpha=0.8333 match=True
+code  p4 T=0.7  baseline      17.3 tok/s x1.00 (pred 1.0) alpha= match=
+code  p4 T=0.7  fixed:1       18.6 tok/s x1.07 (pred 1.0617) alpha=0.8406 match=
+code  p4 T=0.7  fixed:2       18.2 tok/s x1.05 (pred 1.0186) alpha=0.8261 match=
+code  p4 T=0.7  fixed:3       17.5 tok/s x1.01 (pred 0.9669) alpha=0.8252 match=
+code  p4 T=0.7  fixed:4       15.9 tok/s x0.92 (pred 0.8603) alpha=0.8036 match=
+code  p4 T=0.7  fixed:6       15.0 tok/s x0.87 (pred 0.8367) alpha=0.8448 match=
+code  p4 T=0.7  fixed:8       10.9 tok/s x0.63 (pred 0.5918) alpha=0.7742 match=
+code  p5 T=0.0  baseline      17.2 tok/s x1.00 (pred 1.0) alpha= match=True
+code  p5 T=0.0  fixed:1       21.2 tok/s x1.23 (pred 1.1093) alpha=0.9242 match=True
+code  p5 T=0.0  fixed:2       20.6 tok/s x1.20 (pred 1.097) alpha=0.8989 match=True
+code  p5 T=0.0  fixed:3       22.0 tok/s x1.28 (pred 1.1248) alpha=0.93 match=True
+code  p5 T=0.0  fixed:4       20.0 tok/s x1.16 (pred 1.0725) alpha=0.9151 match=True
+code  p5 T=0.0  fixed:6       18.3 tok/s x1.06 (pred 1.0296) alpha=0.9196 match=True
+code  p5 T=0.0  fixed:8       17.4 tok/s x1.01 (pred 0.9484) alpha=0.9153 match=True
+code  p5 T=0.7  baseline      17.0 tok/s x1.00 (pred 1.0) alpha= match=
+code  p5 T=0.7  fixed:1       21.2 tok/s x1.25 (pred 1.0929) alpha=0.8955 match=
+code  p5 T=0.7  fixed:2       22.3 tok/s x1.31 (pred 1.1729) alpha=0.9651 match=
+code  p5 T=0.7  fixed:3       20.1 tok/s x1.18 (pred 1.1224) alpha=0.9286 match=
+code  p5 T=0.7  fixed:4       18.7 tok/s x1.10 (pred 1.0047) alpha=0.8796 match=
+code  p5 T=0.7  fixed:6       18.7 tok/s x1.10 (pred 1.0545) alpha=0.9292 match=
+code  p5 T=0.7  fixed:8       14.6 tok/s x0.86 (pred 0.8232) alpha=0.8739 match=
+math  p0 T=0.0  baseline      16.1 tok/s x1.00 (pred 1.0) alpha= match=True
+math  p0 T=0.0  fixed:1       19.7 tok/s x1.23 (pred 1.1186) alpha=0.9394 match=True
+math  p0 T=0.0  fixed:2       21.5 tok/s x1.34 (pred 1.1729) alpha=0.9651 match=True
+math  p0 T=0.0  fixed:3       20.9 tok/s x1.30 (pred 1.1571) alpha=0.949 match=True
+math  p0 T=0.0  fixed:4       20.8 tok/s x1.30 (pred 1.1773) alpha=0.9615 match=True
+math  p0 T=0.0  fixed:6       25.2 tok/s x1.57 (pred 1.1362) alpha=0.955 match=True
+math  p0 T=0.0  fixed:8       26.0 tok/s x1.62 (pred 1.1435) alpha=0.9652 match=True
+math  p0 T=0.7  baseline      22.1 tok/s x1.00 (pred 1.0) alpha= match=
+math  p0 T=0.7  fixed:1       25.1 tok/s x1.14 (pred 1.1186) alpha=0.9394 match=
+math  p0 T=0.7  fixed:2       24.3 tok/s x1.10 (pred 1.11) alpha=0.9101 match=
+math  p0 T=0.7  fixed:3       24.8 tok/s x1.12 (pred 1.1397) alpha=0.9388 match=
+math  p0 T=0.7  fixed:4       24.5 tok/s x1.11 (pred 1.1766) alpha=0.9612 match=
+math  p0 T=0.7  fixed:6       22.8 tok/s x1.03 (pred 1.052) alpha=0.9292 match=
+math  p0 T=0.7  fixed:8       20.7 tok/s x0.94 (pred 0.9746) alpha=0.9231 match=
+math  p1 T=0.0  baseline      22.0 tok/s x1.00 (pred 1.0) alpha= match=True
+math  p1 T=0.0  fixed:1       26.6 tok/s x1.21 (pred 1.1093) alpha=0.9242 match=True
+math  p1 T=0.0  fixed:2       27.2 tok/s x1.24 (pred 1.1471) alpha=0.9425 match=True
+math  p1 T=0.0  fixed:3       25.9 tok/s x1.18 (pred 1.1245) alpha=0.9293 match=True
+math  p1 T=0.0  fixed:4       26.1 tok/s x1.19 (pred 1.1136) alpha=0.934 match=True
+math  p1 T=0.0  fixed:6       25.7 tok/s x1.17 (pred 1.0805) alpha=0.9381 match=True
+math  p1 T=0.0  fixed:8       24.0 tok/s x1.09 (pred 1.0721) alpha=0.9478 match=True
+math  p1 T=0.7  baseline      23.2 tok/s x1.00 (pred 1.0) alpha= match=
+math  p1 T=0.7  fixed:1       29.0 tok/s x1.25 (pred 1.1186) alpha=0.9394 match=
+math  p1 T=0.7  fixed:2       30.1 tok/s x1.30 (pred 1.1744) alpha=0.9655 match=
+math  p1 T=0.7  fixed:3       28.2 tok/s x1.21 (pred 1.1075) alpha=0.92 match=
+math  p1 T=0.7  fixed:4       30.2 tok/s x1.30 (pred 1.1773) alpha=0.9615 match=
+math  p1 T=0.7  fixed:6       25.2 tok/s x1.08 (pred 1.0547) alpha=0.9286 match=
+math  p1 T=0.7  fixed:8       22.3 tok/s x0.96 (pred 1.0083) alpha=0.9304 match=
+math  p2 T=0.0  baseline      26.2 tok/s x1.00 (pred 1.0) alpha= match=True
+math  p2 T=0.0  fixed:1       28.6 tok/s x1.09 (pred 1.1019) alpha=0.9104 match=True
+math  p2 T=0.0  fixed:2       29.2 tok/s x1.12 (pred 1.1219) alpha=0.9205 match=True
+math  p2 T=0.0  fixed:3       26.4 tok/s x1.01 (pred 1.1219) alpha=0.9286 match=True
+math  p2 T=0.0  fixed:4       26.2 tok/s x1.00 (pred 1.115) alpha=0.9333 match=True
+math  p2 T=0.0  fixed:6       23.9 tok/s x0.91 (pred 1.0547) alpha=0.9286 match=True
+math  p2 T=0.0  fixed:8       21.5 tok/s x0.82 (pred 0.9721) alpha=0.9224 match=True
+math  p2 T=0.7  baseline      23.2 tok/s x1.00 (pred 1.0) alpha= match=
+math  p2 T=0.7  fixed:1       28.7 tok/s x1.24 (pred 1.1261) alpha=0.9538 match=
+math  p2 T=0.7  fixed:2       29.4 tok/s x1.27 (pred 1.1729) alpha=0.9651 match=
+math  p2 T=0.7  fixed:3       27.7 tok/s x1.19 (pred 1.1916) alpha=0.9688 match=
+math  p2 T=0.7  fixed:4       26.0 tok/s x1.12 (pred 1.0928) alpha=0.9245 match=
+math  p2 T=0.7  fixed:6       26.4 tok/s x1.14 (pred 1.1347) alpha=0.955 match=
+math  p2 T=0.7  fixed:8       24.9 tok/s x1.07 (pred 1.11) alpha=0.9561 match=
+math  p3 T=0.0  baseline      23.3 tok/s x1.00 (pred 1.0) alpha= match=True
+math  p3 T=0.0  fixed:1       28.4 tok/s x1.22 (pred 1.1186) alpha=0.9394 match=True
+math  p3 T=0.0  fixed:2       28.7 tok/s x1.23 (pred 1.1471) alpha=0.9425 match=True
+math  p3 T=0.0  fixed:3       28.5 tok/s x1.23 (pred 1.1743) alpha=0.9588 match=True
+math  p3 T=0.0  fixed:4       25.4 tok/s x1.09 (pred 1.0945) alpha=0.9238 match=True
+math  p3 T=0.0  fixed:6       26.4 tok/s x1.13 (pred 1.0532) alpha=0.9292 match=True
+math  p3 T=0.0  fixed:8       28.1 tok/s x1.21 (pred 1.0049) alpha=0.9316 match=True
+math  p3 T=0.7  baseline      25.7 tok/s x1.00 (pred 1.0) alpha= match=
+math  p3 T=0.7  fixed:1       30.9 tok/s x1.20 (pred 1.0929) alpha=0.8955 match=
+math  p3 T=0.7  fixed:2       33.3 tok/s x1.30 (pred 1.1729) alpha=0.9651 match=
+math  p3 T=0.7  fixed:3       31.4 tok/s x1.22 (pred 1.108) alpha=0.92 match=
+math  p3 T=0.7  fixed:4       25.9 tok/s x1.01 (pred 1.1129) alpha=0.9333 match=
+math  p3 T=0.7  fixed:6       23.3 tok/s x0.91 (pred 1.0078) alpha=0.9115 match=
+math  p3 T=0.7  fixed:8       22.5 tok/s x0.88 (pred 0.8953) alpha=0.9 match=
+math  p4 T=0.0  baseline      23.4 tok/s x1.00 (pred 1.0) alpha= match=True
+math  p4 T=0.0  fixed:1       28.3 tok/s x1.21 (pred 1.1019) alpha=0.9104 match=True
+math  p4 T=0.0  fixed:2       28.6 tok/s x1.22 (pred 1.1471) alpha=0.9425 match=True
+math  p4 T=0.0  fixed:3       28.8 tok/s x1.23 (pred 1.1252) alpha=0.93 match=True
+math  p4 T=0.0  fixed:4       25.6 tok/s x1.09 (pred 1.115) alpha=0.9333 match=True
+math  p4 T=0.0  fixed:6       26.3 tok/s x1.12 (pred 1.0819) alpha=0.9375 match=True
+math  p4 T=0.0  fixed:8       23.7 tok/s x1.01 (pred 1.0136) alpha=0.9316 match=True
+math  p4 T=0.7  baseline      22.3 tok/s x1.00 (pred 1.0) alpha= match=
+math  p4 T=0.7  fixed:1       28.4 tok/s x1.27 (pred 1.1359) alpha=0.9692 match=
+math  p4 T=0.7  fixed:2       29.3 tok/s x1.31 (pred 1.1739) alpha=0.9655 match=
+math  p4 T=0.7  fixed:3       27.4 tok/s x1.23 (pred 1.1253) alpha=0.9293 match=
+math  p4 T=0.7  fixed:4       28.7 tok/s x1.29 (pred 1.1989) alpha=0.9709 match=
+math  p4 T=0.7  fixed:6       27.1 tok/s x1.21 (pred 1.166) alpha=0.9636 match=
+math  p4 T=0.7  fixed:8       24.4 tok/s x1.09 (pred 1.0136) alpha=0.9316 match=
