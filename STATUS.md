@@ -2,13 +2,13 @@
 
 Speculative decoding with Qwen2.5-0.5B-Instruct (draft) and Qwen2.5-3B-Instruct (target), batch size 1. See [SPEC.md](SPEC.md) for the plan.
 
-_Last updated: 2026-10-01_
+_Last updated: 2026-10-07_
 
 | Phase | What | Status |
 | --- | --- | --- |
 | P1 | Environment, real-model baseline, measured cost ratio `c` | ✅ Done |
 | P2 | Speculative decoding verified on the real models | ✅ Done |
-| P3 | Fixed-γ sweep | ⏸ Paused at 22 / 36 cells |
+| P3 | Fixed-γ sweep | ✅ Done |
 | P4 | AdaEDL baseline | Not started |
 | P5 | Adaptive-γ comparison (the O2 claim) | Not started |
 | P6 | Plots and report | Not started |
@@ -81,38 +81,43 @@ Files: `results/phase2.csv`, `results/phase2.json`, `results/phase2.log`. The ru
 | Maths | 0.94 |
 | Chat | 0.72 |
 
-## Phase 3 (partial)
+## Phase 3 results
 
-Files: `results/results.csv`, `results/phase3.log`. The full grid is γ ∈ {1, 2, 3, 4, 6, 8} × 3 tasks × 2 temperatures × 6 prompts, with a warm-up and 3 repeats per cell. Saved so far: all 12 code cells and maths prompts 0–4 (22 / 36 cells).
+Files: `results/results.csv` (36 cells, 252 rows), `results/phase3_summary.csv`, `results/phase3.log`. The grid is γ ∈ {1, 2, 3, 4, 6, 8} × 3 tasks × 2 temperatures × 6 prompts, with a warm-up and 3 repeats per (cell, method), 128 new tokens. The run took two sessions (2026-09-30 and 2026-10-06), and bench.py resumed by skipping saved cells.
 
-**Speed-up versus baseline** (mean ± std across prompts, predicted value in brackets):
+**Speed-up versus baseline** (mean ± std across 6 prompts; predicted S(α, γ, c) from the measured α in brackets):
 
-| Task | T | γ = 1 | γ = 2 | γ = 4 | γ = 8 | α |
-| --- | --- | --- | --- | --- | --- | --- |
-| Code | 0 | **1.20 ± 0.06** (1.09) | 1.17 ± 0.12 (1.11) | 1.10 ± 0.14 (1.05) | 1.01 ± 0.18 (0.93) | 0.89–0.91 |
-| Code | 0.7 | **1.21 ± 0.09** (1.10) | 1.19 ± 0.10 (1.09) | 1.09 ± 0.13 (1.00) | 0.91 ± 0.19 (0.82) | 0.88–0.90 |
-| Maths* | 0 | 1.19 ± 0.06 (1.11) | **1.23 ± 0.08** (1.15) | 1.13 ± 0.11 (1.12) | 1.15 ± 0.30 (1.04) | 0.92–0.94 |
-| Maths* | 0.7 | 1.22 ± 0.05 (1.12) | **1.25 ± 0.09** (1.16) | 1.17 ± 0.13 (1.15) | 0.99 ± 0.09 (0.99) | 0.93–0.95 |
+| Task | T | γ = 1 | γ = 2 | γ = 3 | γ = 4 | γ = 6 | γ = 8 | α |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Code | 0 | **1.20 ± 0.06** (1.09) | 1.17 ± 0.12 (1.11) | 1.14 (1.08) | 1.10 (1.05) | 1.06 (1.00) | 1.01 (0.93) | 0.89–0.91 |
+| Code | 0.7 | **1.21 ± 0.09** (1.10) | 1.19 ± 0.10 (1.09) | 1.16 (1.04) | 1.09 (1.00) | 1.02 (0.95) | 0.91 (0.82) | 0.88–0.90 |
+| Maths | 0 | 1.20 ± 0.05 (1.11) | **1.26 ± 0.10** (1.16) | 1.17 (1.15) | 1.13 (1.13) | 1.20 (1.10) | 1.15 (1.06) | 0.93–0.95 |
+| Maths | 0.7 | 1.27 ± 0.13 (1.12) | **1.28 ± 0.10** (1.17) | 1.21 (1.14) | 1.18 (1.15) | 1.17 (1.10) | 1.07 (1.02) | 0.94–0.96 |
+| Chat | 0 | **1.15 ± 0.13** (0.98) | 1.04 ± 0.14 (0.91) | 0.92 (0.82) | 0.83 (0.72) | 0.67 (0.57) | 0.58 (0.50) | 0.71–0.74 |
+| Chat | 0.7 | **1.02 ± 0.10** (0.98) | 0.91 ± 0.15 (0.89) | 0.79 (0.81) | 0.68 (0.71) | 0.61 (0.59) | 0.46 (0.46) | 0.71–0.72 |
 
-\* Maths covers prompts 0–4 only. Chat has not been run yet.
+**Best fixed γ:** 1 for code and chat, 2 for maths. This matches the Phase 1 prediction made before any speculative run (γ = 1 up to α = 0.8, γ = 2 at α = 0.9).
 
-Every greedy cell matches the baseline so far. Findings so far:
+**Findings:**
 
-- **Best fixed γ:** 1 for code and 2 for maths, in line with the Phase 1 prediction (γ = 1 up to α = 0.8, γ = 2 at α = 0.9).
-- **Measured speed-ups beat the formula** by ~0.05–0.1 at small γ. The likely reason is the fixed per-token overhead of the baseline (sampling over 152k vocabulary entries, one GPU sync per token), which speculation spreads over several tokens and `c` does not capture.
+- **Speed-up exists, but it is modest:** about 1.2× on code, 1.26–1.28× on maths, and 1.0–1.15× on chat. This is what c ≈ 0.7 allows.
+- **Acceptance rate depends on the task, not the temperature:** α ≈ 0.90 on code, 0.95 on maths and 0.72 on chat, nearly identical at T = 0 and T = 0.7.
+- **The formula ranks γ correctly but underestimates speed-up** by about 0.05–0.17 at small γ, most on code and maths at T = 0. The likely cause is the baseline's fixed per-token overhead (sampling over 152k vocabulary entries, one GPU sync per token), which speculation spreads over several tokens and which the isolated step timing behind `c` does not capture. Chat at T = 0.7 matches the formula closely.
+- **Large γ hurts on chat:** γ = 8 runs at 0.46–0.58× the baseline speed, because at α ≈ 0.72 most of a long draft is thrown away.
+- **Greedy equality:** 99 of 108 speculative greedy runs match the baseline. All 9 mismatches are on chat prompts 1 and 5, the two prompts Phase 2 diagnosed as fp16 near-ties (top-2 logit gap 0.016 and 0.031). Which tied token wins changes with γ, as before.
 
 ## Open issues
 
-1. **Throughput drifted during the P3 run.** Baseline speed rose from ~17 to ~22–26 tokens/s from maths prompt 1 onward, presumably because the machine's background load changed. Speed-up ratios remain valid, since each cell runs its methods back to back. But `c` (0.734) was measured once at the start, so predictions for later cells may be off. Re-measure `c` per cell, or at least per task, before the final report.
-2. **The fp32 recheck is impossible on 8 GB.** Phase 2 uses the near-tie analysis described above instead.
-3. **High `c` limits the headroom.** Compiling the draft (P5) is the main lever.
+1. **Throughput drifted between sessions and within some cells.** The baseline ran at ~17 tokens/s for code and ~21–23 for maths and chat, presumably because of the machine's background load. Within-cell repeat noise is small for most cells (median CV 1.6–1.8%), but maths prompt 5 reached CV 16%. Speed-ups compare methods within the same cell, but each method's repeats run back to back, so drift can still bias a single cell. **Fix for P5:** interleave methods across repeats (baseline, γ1, γ2, … per repeat) so drift hits every method equally.
+2. **`c` was measured once per session** (0.734, then 0.753), while Phase 1 gave 0.693 ± 0.029. Predictions use the c logged in each row. Re-measure c per cell in P5.
+3. **The fp32 recheck is impossible on 8 GB.** Phases 2 and 3 use the near-tie logit-gap analysis instead.
+4. **High `c` limits the headroom.** A compiled or static-cache draft (P5) is the main lever.
 
 ## Next steps
 
-1. Finish P3: run `.venv\Scripts\python bench.py >> results\phase3.log` (it skips saved cells, ~50 min left), then `python summarize.py`.
-2. P4: implement AdaEDL (arXiv:2410.18351) from the paper as a drop-in controller.
-3. P5: adaptive-γ comparison, including the compiled / static-cache draft.
-4. P6: plots and report, every number traced to `results.csv`.
+1. P4: implement AdaEDL (arXiv:2410.18351) from the paper, as a drop-in alternative to `GammaController` selectable in bench.py.
+2. P5: adaptive γ versus the best fixed γ (1 for code and chat, 2 for maths) and AdaEDL, with interleaved repeats, c per cell, and the compiled / static-cache draft as an extra arm.
+3. P6: plots (tokens/s vs γ per task, acceptance by draft position from the `pos_*` columns, predicted vs measured speed-up) and the report.
 
 ## Reproduce
 
