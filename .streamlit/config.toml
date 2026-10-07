@@ -1,0 +1,8 @@
+# Streamlit's file watcher walks every loaded module; on torch.classes that raises
+# "Tried to instantiate class '__path__._path'" tracebacks in the terminal. The demo
+# does not need live reload, so the watcher is off.
+[server]
+fileWatcherType = "none"
+
+[browser]
+gatherUsageStats = false
