@@ -3,3 +3,6 @@ torch>=2.3
 transformers>=4.56
 accelerate
 nvidia-ml-py
+streamlit>=1.40
+plotly
+pandas

@@ -173,6 +173,34 @@ def test_tokenizer_mismatch_refused():
         raise AssertionError("incompatible pair accepted")
 
 
+def test_on_round_hook():
+    """The display hook sees exactly the returned tokens, does not change them, and is not timed."""
+    target = tiny_model(0)
+    draft = noisy_copy(target, 0.02, seed=7)
+    for temp in (0.0, 1.0):
+        ref, _ = speculative_generate(target, draft, PROMPT, 40, FixedGamma(3), temperature=temp, seed=5)
+        seen, from_draft = [], 0
+
+        def hook(committed, n_draft, rejected):
+            nonlocal from_draft
+            assert 0 <= n_draft <= len(committed) and (rejected is None or isinstance(rejected, int))
+            seen.extend(committed)
+            from_draft += n_draft
+            time.sleep(0.01)
+
+        out, st = speculative_generate(target, draft, PROMPT, 40, FixedGamma(3), temperature=temp, seed=5,
+                                       on_round=hook)
+        assert out == ref == seen, temp
+        # no EOS and γ is capped to the remaining budget, so no round is truncated
+        assert from_draft == st.accepted and st.callback_s >= 0.01 * st.rounds
+        base, _ = baseline_generate(target, PROMPT, 40, temperature=temp, seed=5)
+        seen, from_draft = [], 0
+        out, st = baseline_generate(target, PROMPT, 40, temperature=temp, seed=5, on_round=hook)
+        assert out == base == seen and from_draft == 0
+        # 40 hook calls x 10 ms would dominate if they were timed
+        assert st.seconds < st.callback_s, (st.seconds, st.callback_s)
+
+
 if __name__ == "__main__":
     disable_power_throttling()
     print(f"device: {DEVICE}" + (f" ({torch.cuda.get_device_name()})" if DEVICE.type == "cuda" else ""))

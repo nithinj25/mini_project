@@ -35,7 +35,7 @@ The first timings were 4–10× too slow. Windows 11 classed the Python process 
 
 ## Tests
 
-`ALL TESTS PASSED`: 7 tests, about 170 s on the GPU.
+`ALL TESTS PASSED`: 8 tests, about 170 s on the GPU.
 
 - **Lossless `verify`:** TV(output, p) = 0.0027 over 40k samples.
 - **Mutation check (SPEC §8):** replacing the residual with p raises that TV to 0.171, and the two-token joint test's TV from 0.023 to 0.119. Both tests catch the bug.
@@ -118,6 +118,16 @@ Files: `results/results.csv` (36 cells, 252 rows), `results/phase3_summary.csv`,
 1. P4: implement AdaEDL (arXiv:2410.18351) from the paper, as a drop-in alternative to `GammaController` selectable in bench.py.
 2. P5: adaptive γ versus the best fixed γ (1 for code and chat, 2 for maths) and AdaEDL, with interleaved repeats, c per cell, and the compiled / static-cache draft as an extra arm.
 3. P6: plots (tokens/s vs γ per task, acceptance by draft position from the `pos_*` columns, predicted vs measured speed-up) and the report.
+
+## Presentation demo
+
+`run_demo.bat` (or `.venv\Scripts\python -m streamlit run demopp.py`) opens a local app at http://localhost:8501:
+
+1. **Base model:** the 3B model alone, streamed live with tokens/s.
+2. **Speculative decoding:** the same prompt streamed live. Guesses from the 0.5B model that the 3B accepted are highlighted green, and rejected guesses can be shown struck through. The page compares speed and output with page 1.
+3. **Results:** the Phase 3 charts (speed-up vs γ, acceptance by draft position, predicted vs measured) and the data table, read from `results/`.
+
+Display time is excluded from all timings by the `on_round` hook in `specdec.py` (covered by `test_on_round_hook`).
 
 ## Reproduce
 

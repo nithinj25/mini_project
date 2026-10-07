@@ -103,6 +103,7 @@ class Stats:
     pos_tested: list[int] = field(default_factory=list)
     pos_accepted: list[int] = field(default_factory=list)
     gammas: list[int] = field(default_factory=list)
+    callback_s: float = 0.0  # time spent in on_round, excluded from `seconds`
 
     def record_round(self, gamma: int, n_accepted: int) -> None:
         n_tested = n_accepted + (n_accepted < gamma)
@@ -153,12 +154,24 @@ def _commit(seq: list[int], new: list[int], eos: set[int], limit: int) -> bool:
     return False
 
 
+def _notify(on_round, stats: Stats, committed: list[int], n_draft: int, rejected) -> None:
+    """Call the display hook and keep its time out of the measurement."""
+    if on_round is not None:
+        t = time.perf_counter()
+        on_round(committed, n_draft, rejected)
+        stats.callback_s += time.perf_counter() - t
+
+
 # --------------------------------------------------------------------------- decoders
 
 @torch.inference_mode()
 def baseline_generate(model, prompt_ids: list[int], max_new_tokens: int, temperature: float = 0.0,
-                      eos_token_id=None, seed: int = 0) -> tuple[list[int], Stats]:
-    """Plain autoregressive decoding: one target pass per token."""
+                      eos_token_id=None, seed: int = 0, on_round=None) -> tuple[list[int], Stats]:
+    """Plain autoregressive decoding: one target pass per token.
+
+    on_round(committed, n_draft, rejected) is called after every commit (n_draft is always 0 here);
+    its time is excluded from stats.seconds so a live display does not distort the timing.
+    """
     device = model.device
     gen = make_generator(device, seed)
     eos, limit = _eos_set(eos_token_id), len(prompt_ids) + max_new_tokens
@@ -170,12 +183,14 @@ def baseline_generate(model, prompt_ids: list[int], max_new_tokens: int, tempera
     while not done:
         p = to_probs(_forward(model, cache, seq, 1)[-1], temperature)
         stats.target_passes += 1
+        before = len(seq)
         done = _commit(seq, [sample(p, gen)], eos, limit)
         if stats.target_passes == 1:
             _sync(device)
             stats.ttft_s = time.perf_counter() - t0
+        _notify(on_round, stats, seq[before:], 0, None)
     _sync(device)
-    stats.seconds = time.perf_counter() - t0
+    stats.seconds = time.perf_counter() - t0 - stats.callback_s
     new = seq[len(prompt_ids):]
     stats.new_tokens = len(new)
     return new, stats
@@ -184,8 +199,13 @@ def baseline_generate(model, prompt_ids: list[int], max_new_tokens: int, tempera
 @torch.inference_mode()
 def speculative_generate(target, draft, prompt_ids: list[int], max_new_tokens: int, controller,
                          temperature: float = 0.0, eos_token_id=None,
-                         seed: int = 0) -> tuple[list[int], Stats]:
-    """Speculative decoding (SPEC §3). `controller` picks γ each round (FixedGamma, GammaController, ...)."""
+                         seed: int = 0, on_round=None) -> tuple[list[int], Stats]:
+    """Speculative decoding (SPEC §3). `controller` picks γ each round (FixedGamma, GammaController, ...).
+
+    on_round(committed, n_draft, rejected) is called after every round: the tokens committed, how many
+    of them (from the front) are accepted draft guesses, and the rejected guess (None if all were kept).
+    Its time is excluded from stats.seconds.
+    """
     device = target.device
     gen = make_generator(device, seed)
     eos, limit = _eos_set(eos_token_id), len(prompt_ids) + max_new_tokens
@@ -220,14 +240,17 @@ def speculative_generate(target, draft, prompt_ids: list[int], max_new_tokens: i
         controller.update(n_acc, n_acc + (n_acc < gamma), gamma)
 
         # 5. commit, then roll both caches back to len(seq) - 1
+        before = len(seq)
         done = _commit(seq, drafts[:n_acc] + [extra], eos, limit)
         rollback(t_cache, len(seq) - 1)
         rollback(d_cache, len(seq) - 1)
         if stats.rounds == 1:
             _sync(device)
             stats.ttft_s = time.perf_counter() - t0
+        committed = seq[before:]
+        _notify(on_round, stats, committed, min(n_acc, len(committed)), drafts[n_acc] if n_acc < gamma else None)
     _sync(device)
-    stats.seconds = time.perf_counter() - t0
+    stats.seconds = time.perf_counter() - t0 - stats.callback_s
     new = seq[len(prompt_ids):]
     stats.new_tokens = len(new)
     return new, stats
