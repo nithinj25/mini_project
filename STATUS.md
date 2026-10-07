@@ -121,7 +121,7 @@ Files: `results/results.csv` (36 cells, 252 rows), `results/phase3_summary.csv`,
 
 ## Presentation demo
 
-`run_demo.bat` (or `.venv\Scripts\python -m streamlit run demopp.py`) opens a local app at http://localhost:8501:
+`run_demo.bat` (or `.venv\Scripts\python -m streamlit run demo\app.py`) opens a local app at http://localhost:8501:
 
 1. **Base model:** the 3B model alone, streamed live with tokens/s.
 2. **Speculative decoding:** the same prompt streamed live. Guesses from the 0.5B model that the 3B accepted are highlighted green, and rejected guesses can be shown struck through. The page compares speed and output with page 1.
