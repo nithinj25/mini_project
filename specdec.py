@@ -222,9 +222,10 @@ def speculative_generate(target, draft, prompt_ids: list[int], max_new_tokens: i
         # 1. draft: γ autoregressive guesses, keeping the full distribution each time
         drafts, qs = [], []
         for i in range(gamma_max):
-            q = to_probs(_forward(draft, d_cache, seq + drafts, 1)[-1], temperature)
+            logits = _forward(draft, d_cache, seq + drafts, 1)[-1]
+            q = to_probs(logits, temperature)
             stats.draft_passes += 1
-            if controller.stop_before(q, i):
+            if controller.stop_before(q, i, logits):
                 break
             drafts.append(sample(q, gen))
             qs.append(q)
@@ -286,7 +287,8 @@ class FixedGamma:
     def next_gamma(self) -> int:
         return self.gamma
 
-    def stop_before(self, q: torch.Tensor, i: int) -> bool:
+    def stop_before(self, q: torch.Tensor, i: int, logits: torch.Tensor = None) -> bool:
+        """Called with the draft distribution q (and raw logits) for guess i, before it is sampled."""
         return False
 
     def update(self, accepted: int, tested: int, gamma: int) -> None:
@@ -320,6 +322,76 @@ class GammaController(FixedGamma):
     def update(self, accepted: int, tested: int, gamma: int) -> None:
         self.kept = self.decay * self.kept + accepted
         self.seen = self.decay * self.seen + tested
+
+
+class AdaEDL(FixedGamma):
+    """AdaEDL: entropy-based early draft stopping (Agrawal, Jeon, Lee, NeurIPS ENLSP 2024, arXiv:2410.18351).
+
+    Stopping rule (paper §3, Fig. 1, App. A): before drafting the next token, with H = entropy of the
+    draft distribution p_DM, stop drafting if
+        1 - sqrt(entropy_factor * H) < λ
+    (1 - sqrt(γ_ent·H) is an approximate lower bound on that token's acceptance probability).
+
+    Threshold update (paper Algorithm 1), after every round with n_drafted guesses and n_acc accepted:
+        AR  <- β1·AR + (1-β1)·n_acc/n_drafted
+        λ'  =  λ + ε  if AR < α;   λ - ε  elif n_acc != L;   λ  otherwise
+        λ   <- β2·λ + (1-β2)·λ'
+    Defaults are the paper's (§3.1): γ_ent = 0.2, β1 = 0.5, β2 = 0.9, ε = 0.01, α = 0.9. The paper does not
+    fix the initial λ (it sweeps 0.3-0.9), so lam0 is a parameter.
+
+    Choices the paper leaves open, made here:
+      * Greedy (T = 0): q is one-hot (entropy 0), which would never stop, so H is taken from the draft's
+        unscaled softmax. For T > 0, H is the entropy of the distribution the draft samples from.
+      * min_draft = 1: the first guess of a round is always drafted. Checking it too can give a round with
+        n_drafted = 0, where Algorithm 1's n_acc/n_drafted is 0/0 and λ can stay too high to ever recover.
+      * Entropy in nats; the moving average AR starts at the target α.
+      * AR follows the paper (kept ÷ drafted); the reported Stats.alpha stays kept ÷ tested (SPEC §5.5).
+    """
+
+    def __init__(self, max_draft: int = 8, lam0: float = 0.7, temperature: float = 1.0,
+                 entropy_factor: float = 0.2, target_ar: float = 0.9, eps: float = 0.01,
+                 beta1: float = 0.5, beta2: float = 0.9, min_draft: int = 1, log_all: bool = False):
+        self.max_draft, self.lam0, self.temperature = max_draft, lam0, temperature
+        self.log_all = log_all  # also log entropy at positions < min_draft (analysis only; costs time)
+        self.entropy_factor, self.target_ar, self.eps = entropy_factor, target_ar, eps
+        self.beta1, self.beta2, self.min_draft = beta1, beta2, min_draft
+        self.reset()
+
+    def reset(self) -> None:
+        self.lam, self.ar = self.lam0, self.target_ar
+        self.steps = []   # (round, position, entropy, stopped) for every checked draft position
+        self.rounds = []  # (n_drafted, n_acc, λ after the update) per round
+
+    def next_gamma(self) -> int:
+        return self.max_draft
+
+    def entropy(self, logits: torch.Tensor) -> float:
+        t = self.temperature if self.temperature > 0 else 1.0
+        p = torch.softmax(logits.float() / t, dim=-1)
+        return float(-torch.special.xlogy(p, p).sum())  # xlogy: 0·log 0 = 0, so masked tokens are safe
+
+    def lower_bound(self, h: float) -> float:
+        return 1.0 - math.sqrt(self.entropy_factor * h)
+
+    def stop_before(self, q: torch.Tensor, i: int, logits: torch.Tensor = None) -> bool:
+        if i < self.min_draft and not self.log_all:
+            return False
+        h = self.entropy(logits if logits is not None else torch.log(q.clamp_min(1e-30)))
+        stop = i >= self.min_draft and self.lower_bound(h) < self.lam
+        self.steps.append((len(self.rounds), i, h, stop))
+        return stop
+
+    def update(self, accepted: int, tested: int, gamma: int) -> None:
+        if gamma > 0:
+            self.ar = self.beta1 * self.ar + (1 - self.beta1) * accepted / gamma
+        if self.ar < self.target_ar:
+            lam_p = self.lam + self.eps
+        elif accepted != self.max_draft:
+            lam_p = self.lam - self.eps
+        else:
+            lam_p = self.lam
+        self.lam = self.beta2 * self.lam + (1 - self.beta2) * lam_p
+        self.rounds.append((gamma, accepted, self.lam))
 
 
 # --------------------------------------------------------------------------- pair checks + cost ratio

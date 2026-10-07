@@ -3,13 +3,14 @@
 Run: python test_specdec.py   (force CPU: python test_specdec.py --cpu)
 """
 import copy
+import math
 import sys
 import time
 
 import torch
 from transformers import DynamicCache, Qwen2Config, Qwen2ForCausalLM
 
-from specdec import (FixedGamma, GammaController, assert_compatible, baseline_generate, best_gamma,
+from specdec import (AdaEDL, FixedGamma, GammaController, assert_compatible, baseline_generate, best_gamma,
                      expected_tokens, predicted_speedup, rollback, speculative_generate, to_probs,
                      verify)
 from winperf import disable_power_throttling
@@ -199,6 +200,76 @@ def test_on_round_hook():
         assert out == base == seen and from_draft == 0
         # 40 hook calls x 10 ms would dominate if they were timed
         assert st.seconds < st.callback_s, (st.seconds, st.callback_s)
+
+
+def test_adaedl_stopping_rule():
+    """Stop before guess i (i >= min_draft) iff 1 - sqrt(0.2 H) < λ, H in nats (AdaEDL §3). Uniform over k: H = ln k."""
+    V = 50
+
+    def uniform(k):
+        x = torch.full((V,), -float("inf"), device=DEVICE)
+        x[:k] = 0.0
+        return x
+
+    for lam in (0.3, 0.7):
+        a = AdaEDL(lam0=lam, temperature=0.0)
+        for k in (1, 2, 3, 5, 12, 50):
+            h = math.log(k)
+            assert abs(a.entropy(uniform(k)) - h) < 1e-5
+            assert a.stop_before(None, 1, uniform(k)) == (1 - math.sqrt(0.2 * h) < lam), (lam, k)
+        assert a.stop_before(None, 0, uniform(50)) is False  # min_draft = 1: first guess always drafted
+    # λ = 0.7 stops once H > (0.3)^2 / 0.2 = 0.45 nats: k = 1 (H 0) continues, k = 2 (H 0.69) stops
+    a = AdaEDL(lam0=0.7, temperature=0.0)
+    assert not a.stop_before(None, 1, uniform(1)) and a.stop_before(None, 1, uniform(2))
+    # T > 0 measures the distribution actually sampled from: temperature 2 flattens a peaked one
+    peaked = torch.zeros(V, device=DEVICE)
+    peaked[0] = 6.0
+    assert AdaEDL(temperature=2.0).entropy(peaked) > AdaEDL(temperature=1.0).entropy(peaked)
+
+
+def test_adaedl_threshold_update():
+    """Algorithm 1 of the AdaEDL paper, worked by hand (target AR 0.85 keeps every comparison off its boundary)."""
+    a = AdaEDL(max_draft=4, lam0=0.5, target_ar=0.85)
+    expected = [  # (n_acc, n_drafted) -> (AR, λ)
+        ((4, 4), (0.925, 0.5)),       # AR >= target and n_acc == L: λ' = λ
+        ((1, 4), (0.5875, 0.501)),    # AR < target: λ' = λ + ε
+        ((4, 4), (0.79375, 0.502)),   # still below target
+        ((3, 3), (0.896875, 0.501)),  # AR >= target, n_acc != L: λ' = λ - ε
+    ]
+    for (acc, drafted), (ar, lam) in expected:
+        a.update(acc, acc + (acc < drafted), drafted)  # tested = kept + the rejected one, as the engine reports
+        assert abs(a.ar - ar) < 1e-12 and abs(a.lam - lam) < 1e-12, (acc, drafted, a.ar, a.lam)
+    a.reset()
+    assert a.lam == 0.5 and a.ar == 0.85 and a.rounds == []
+
+
+def test_adaedl_lossless_and_adaptive():
+    """With AdaEDL choosing draft lengths, greedy output still equals the baseline and sampling stays exact."""
+    target = tiny_model(0)
+    draft = noisy_copy(target, 0.02, seed=7)
+    ref, _ = baseline_generate(target, PROMPT, 60)
+    ctl = AdaEDL(max_draft=6, lam0=0.4, temperature=0.0)
+    out, st = speculative_generate(target, draft, PROMPT, 60, ctl)
+    assert out == ref
+    assert len(set(st.gammas)) >= 3 and any(s for *_, s in ctl.steps), st.gammas  # drafts really vary
+    print(f"  greedy: draft lengths {sorted(set(st.gammas))}, mean {st.mean_gamma:.2f}")
+
+    V = 6
+    target = tiny_model(0, vocab=V, init=0.4)
+    draft = tiny_model(99, vocab=V, init=0.4)
+    with torch.no_grad():
+        p1 = to_probs(target(torch.tensor([[1, 5, 2]], device=DEVICE)).logits[0, -1], 1.0)
+        exact = torch.stack([p1[a] * to_probs(target(torch.tensor([[1, 5, 2] + [a]], device=DEVICE)).logits[0, -1], 1.0)
+                             for a in range(V)])
+    N, counts, lengths = 3000, torch.zeros(V, V, device=DEVICE), []
+    ctl = AdaEDL(max_draft=3, lam0=0.55, temperature=1.0)
+    for s in range(N):
+        out, st = speculative_generate(target, draft, [1, 5, 2], 4, ctl, temperature=1.0, seed=s)
+        counts[out[0], out[1]] += 1
+        lengths += st.gammas
+    d = tv(counts / N, exact)
+    print(f"  sampling: TV(joint, exact) = {d:.4f}, draft lengths used {sorted(set(lengths))}")
+    assert d < 0.06 and len(set(lengths) - {0}) >= 3, (d, set(lengths))
 
 
 if __name__ == "__main__":

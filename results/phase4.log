@@ -1,0 +1,184 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:   0%|          | 1/434 [00:00<03:19,  2.17it/s]Loading weights:   5%|▍         | 21/434 [00:00<00:08, 49.01it/s]Loading weights:   8%|▊         | 33/434 [00:00<00:07, 55.41it/s]Loading weights:  10%|▉         | 43/434 [00:00<00:07, 49.03it/s]Loading weights:  12%|█▏        | 51/434 [00:01<00:08, 45.36it/s]Loading weights:  14%|█▎        | 59/434 [00:01<00:08, 42.78it/s]Loading weights:  16%|█▌        | 69/434 [00:01<00:08, 42.50it/s]Loading weights:  19%|█▉        | 83/434 [00:01<00:06, 51.90it/s]Loading weights:  21%|██        | 89/434 [00:01<00:06, 53.01it/s]Loading weights:  22%|██▏       | 95/434 [00:02<00:07, 46.85it/s]Loading weights:  25%|██▍       | 107/434 [00:02<00:05, 60.65it/s]Loading weights:  26%|██▋       | 114/434 [00:02<00:05, 55.32it/s]Loading weights:  28%|██▊       | 121/434 [00:02<00:06, 46.77it/s]Loading weights:  30%|███       | 131/434 [00:02<00:06, 45.00it/s]Loading weights:  33%|███▎      | 142/434 [00:02<00:05, 56.73it/s]Loading weights:  34%|███▍      | 149/434 [00:03<00:05, 51.23it/s]Loading weights:  36%|███▌      | 155/434 [00:03<00:05, 51.09it/s]Loading weights:  37%|███▋      | 161/434 [00:03<00:05, 50.81it/s]Loading weights:  38%|███▊      | 167/434 [00:03<00:05, 44.54it/s]Loading weights:  41%|████      | 179/434 [00:03<00:05, 45.18it/s]Loading weights:  44%|████▍     | 190/434 [00:03<00:04, 57.15it/s]Loading weights:  45%|████▌     | 197/434 [00:04<00:04, 52.00it/s]Loading weights:  47%|████▋     | 204/434 [00:04<00:04, 47.08it/s]Loading weights:  49%|████▉     | 213/434 [00:04<00:03, 55.55it/s]Loading weights:  51%|█████     | 220/434 [00:04<00:04, 52.16it/s]Loading weights:  53%|█████▎    | 228/434 [00:04<00:03, 54.49it/s]Loading weights:  55%|█████▍    | 237/434 [00:04<00:04, 42.69it/s]Loading weights:  57%|█████▋    | 249/434 [00:05<00:04, 45.81it/s]Loading weights:  61%|██████    | 263/434 [00:05<00:03, 52.51it/s]Loading weights:  62%|██████▏   | 269/434 [00:05<00:03, 50.16it/s]Loading weights:  63%|██████▎   | 275/434 [00:05<00:03, 44.86it/s]Loading weights:  66%|██████▌   | 287/434 [00:05<00:02, 49.64it/s]Loading weights:  68%|██████▊   | 293/434 [00:06<00:02, 49.03it/s]Loading weights:  69%|██████▉   | 299/434 [00:06<00:03, 42.79it/s]Loading weights:  72%|███████▏  | 311/434 [00:06<00:02, 45.55it/s]Loading weights:  74%|███████▍  | 323/434 [00:06<00:02, 46.35it/s]Loading weights:  77%|███████▋  | 335/434 [00:06<00:01, 56.86it/s]Loading weights:  79%|███████▉  | 342/434 [00:07<00:01, 51.08it/s]Loading weights:  80%|████████  | 348/434 [00:07<00:01, 46.87it/s]Loading weights:  82%|████████▏ | 358/434 [00:07<00:01, 51.12it/s]Loading weights:  84%|████████▍ | 365/434 [00:07<00:01, 48.45it/s]Loading weights:  85%|████████▌ | 370/434 [00:07<00:01, 46.36it/s]Loading weights:  88%|████████▊ | 381/434 [00:07<00:01, 51.49it/s]Loading weights:  90%|████████▉ | 389/434 [00:07<00:00, 57.17it/s]Loading weights:  91%|█████████ | 395/434 [00:08<00:00, 46.14it/s]Loading weights:  93%|█████████▎| 405/434 [00:08<00:00, 45.36it/s]Loading weights:  97%|█████████▋| 419/434 [00:08<00:00, 55.76it/s]Loading weights:  98%|█████████▊| 425/434 [00:08<00:00, 54.51it/s]Loading weights: 100%|██████████| 434/434 [00:08<00:00, 50.04it/s]
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:00<00:39,  7.31it/s]Loading weights:  12%|█▏        | 35/290 [00:00<00:01, 172.79it/s]Loading weights:  21%|██        | 60/290 [00:00<00:01, 196.35it/s]Loading weights:  28%|██▊       | 81/290 [00:00<00:01, 185.03it/s]Loading weights:  37%|███▋      | 107/290 [00:00<00:00, 206.48it/s]Loading weights:  45%|████▌     | 131/290 [00:00<00:00, 211.06it/s]Loading weights:  53%|█████▎    | 153/290 [00:00<00:00, 204.94it/s]Loading weights:  62%|██████▏   | 181/290 [00:00<00:00, 224.62it/s]Loading weights:  70%|███████   | 204/290 [00:01<00:00, 217.57it/s]Loading weights:  79%|███████▊  | 228/290 [00:01<00:00, 217.89it/s]Loading weights:  87%|████████▋ | 251/290 [00:01<00:00, 221.21it/s]Loading weights:  95%|█████████▌| 276/290 [00:01<00:00, 229.53it/s]Loading weights: 100%|██████████| 290/290 [00:01<00:00, 213.26it/s]
+code p0 T=0.0 λ0=0.7: draft len 3.53  H̄ 0.33  α 0.913  λ→0.706  x0.94  match=True
+code p0 T=0.7 λ0=0.7: draft len 5.14  H̄ 0.19  α 0.964  λ→0.704  x1.40  match=
+code p0 T=0.7 λ0=0.3: draft len 7.65  H̄ 0.21  α 0.915  λ→0.310  x0.99  match=
+code p0 T=0.7 λ0=0.5: draft len 6.67  H̄ 0.21  α 0.947  λ→0.513  x1.03  match=
+code p0 T=0.7 λ0=0.9: draft len 2.42  H̄ 0.20  α 0.924  λ→0.893  x0.91  match=
+code p1 T=0.0 λ0=0.7: draft len 3.61  H̄ 0.26  α 0.990  λ→0.685  x1.17  match=True
+code p1 T=0.7 λ0=0.7: draft len 4.41  H̄ 0.19  α 0.944  λ→0.706  x1.05  match=
+code p1 T=0.7 λ0=0.3: draft len 7.88  H̄ 0.21  α 0.889  λ→0.322  x0.82  match=
+code p1 T=0.7 λ0=0.5: draft len 6.92  H̄ 0.24  α 0.888  λ→0.520  x0.87  match=
+code p1 T=0.7 λ0=0.9: draft len 1.84  H̄ 0.43  α 0.867  λ→0.909  x0.95  match=
+code p2 T=0.0 λ0=0.7: draft len 5.14  H̄ 0.20  α 0.991  λ→0.692  x1.29  match=True
+code p2 T=0.7 λ0=0.7: draft len 4.68  H̄ 0.19  α 0.935  λ→0.713  x1.00  match=
+code p3 T=0.0 λ0=0.7: draft len 3.50  H̄ 0.38  α 0.951  λ→0.701  x1.05  match=True
+code p3 T=0.7 λ0=0.7: draft len 3.26  H̄ 0.28  α 0.890  λ→0.713  x0.88  match=
+code p4 T=0.0 λ0=0.7: draft len 1.75  H̄ 0.97  α 0.884  λ→0.693  x0.84  match=True
+code p4 T=0.7 λ0=0.7: draft len 2.13  H̄ 0.55  α 0.789  λ→0.724  x0.80  match=
+code p5 T=0.0 λ0=0.7: draft len 3.22  H̄ 0.33  α 0.951  λ→0.700  x1.06  match=True
+code p5 T=0.7 λ0=0.7: draft len 4.46  H̄ 0.15  α 0.981  λ→0.692  x1.20  match=
+math p0 T=0.0 λ0=0.7: draft len 4.67  H̄ 0.21  α 0.991  λ→0.689  x1.03  match=True
+math p0 T=0.7 λ0=0.7: draft len 6.05  H̄ 0.11  α 0.970  λ→0.702  x0.90  match=
+math p0 T=0.7 λ0=0.3: draft len 7.90  H̄ 0.19  α 0.923  λ→0.314  x0.76  match=
+math p0 T=0.7 λ0=0.5: draft len 6.96  H̄ 0.24  α 0.887  λ→0.523  x0.66  match=
+math p0 T=0.7 λ0=0.9: draft len 3.43  H̄ 0.14  α 0.970  λ→0.894  x0.88  match=
+math p1 T=0.0 λ0=0.7: draft len 5.00  H̄ 0.20  α 0.972  λ→0.701  x1.25  match=True
+math p1 T=0.7 λ0=0.7: draft len 4.96  H̄ 0.13  α 0.963  λ→0.704  x1.21  match=
+math p1 T=0.7 λ0=0.3: draft len 7.94  H̄ 0.10  α 0.965  λ→0.308  x1.30  match=
+math p1 T=0.7 λ0=0.5: draft len 6.82  H̄ 0.22  α 0.938  λ→0.515  x1.14  match=
+math p1 T=0.7 λ0=0.9: draft len 3.29  H̄ 0.14  α 0.970  λ→0.888  x1.27  match=
+math p2 T=0.0 λ0=0.7: draft len 4.81  H̄ 0.19  α 0.962  λ→0.699  x0.89  match=True
+math p2 T=0.7 λ0=0.7: draft len 5.33  H̄ 0.11  α 0.991  λ→0.694  x0.98  match=
+math p3 T=0.0 λ0=0.7: draft len 3.65  H̄ 0.26  α 0.971  λ→0.693  x1.11  match=True
+math p3 T=0.7 λ0=0.7: draft len 4.83  H̄ 0.16  α 0.981  λ→0.693  x1.07  match=
+math p4 T=0.0 λ0=0.7: draft len 4.85  H̄ 0.18  α 0.971  λ→0.697  x1.07  match=True
+math p4 T=0.7 λ0=0.7: draft len 4.56  H̄ 0.15  α 0.981  λ→0.690  x1.21  match=
+math p5 T=0.0 λ0=0.7: draft len 5.50  H̄ 0.11  α 0.991  λ→0.695  x1.30  match=True
+math p5 T=0.7 λ0=0.7: draft len 5.84  H̄ 0.07  α 0.991  λ→0.693  x1.24  match=
+chat p0 T=0.0 λ0=0.7: draft len 1.45  H̄ 1.08  α 0.911  λ→0.686  x0.90  match=True
+chat p0 T=0.7 λ0=0.7: draft len 1.79  H̄ 0.68  α 0.753  λ→0.738  x0.79  match=
+chat p0 T=0.7 λ0=0.3: draft len 7.22  H̄ 0.68  α 0.748  λ→0.335  x0.60  match=
+chat p0 T=0.7 λ0=0.5: draft len 3.88  H̄ 0.68  α 0.798  λ→0.530  x0.76  match=
+chat p0 T=0.7 λ0=0.9: draft len 1.30  H̄ 0.72  α 0.800  λ→0.902  x0.81  match=
+chat p1 T=0.0 λ0=0.7: draft len 1.57  H̄ 1.20  α 0.753  λ→0.737  x0.80  match=False
+chat p1 T=0.7 λ0=0.7: draft len 1.89  H̄ 0.66  α 0.793  λ→0.724  x0.78  match=
+chat p1 T=0.7 λ0=0.3: draft len 6.80  H̄ 0.69  α 0.675  λ→0.345  x0.50  match=
+chat p1 T=0.7 λ0=0.5: draft len 3.49  H̄ 0.75  α 0.798  λ→0.533  x0.73  match=
+chat p1 T=0.7 λ0=0.9: draft len 1.39  H̄ 0.62  α 0.817  λ→0.909  x0.81  match=
+chat p2 T=0.0 λ0=0.7: draft len 1.57  H̄ 1.23  α 0.733  λ→0.741  x0.72  match=True
+chat p2 T=0.7 λ0=0.7: draft len 1.74  H̄ 0.73  α 0.689  λ→0.746  x0.67  match=
+chat p3 T=0.0 λ0=0.7: draft len 1.34  H̄ 1.25  α 0.765  λ→0.715  x0.89  match=True
+chat p3 T=0.7 λ0=0.7: draft len 1.48  H̄ 0.90  α 0.656  λ→0.749  x0.79  match=
+chat p4 T=0.0 λ0=0.7: draft len 1.46  H̄ 1.67  α 0.690  λ→0.752  x0.71  match=True
+chat p4 T=0.7 λ0=0.7: draft len 1.86  H̄ 0.81  α 0.786  λ→0.714  x0.68  match=
+chat p5 T=0.0 λ0=0.7: draft len 1.43  H̄ 1.40  α 0.759  λ→0.735  x0.78  match=False
+chat p5 T=0.7 λ0=0.7: draft len 1.54  H̄ 0.83  α 0.807  λ→0.709  x0.77  match=
+
+{
+  "lam0_main": 0.7,
+  "max_draft": 8,
+  "entropy_factor": 0.2,
+  "stop_rate_by_entropy": {
+    "0-0.25": {
+      "stop_rate": 0.0,
+      "checks": 2279
+    },
+    "0.25-0.5": {
+      "stop_rate": 0.1868,
+      "checks": 273
+    },
+    "0.5-1.0": {
+      "stop_rate": 1.0,
+      "checks": 508
+    },
+    "1.0-2.0": {
+      "stop_rate": 1.0,
+      "checks": 433
+    },
+    "2.0-4.0": {
+      "stop_rate": 1.0,
+      "checks": 190
+    },
+    "4.0-inf": {
+      "stop_rate": 1.0,
+      "checks": 12
+    }
+  },
+  "corr_round_entropy_vs_draft_len": -0.5764,
+  "corr_prompt_entropy_vs_draft_len": -0.8892,
+  "by_task": {
+    "code T=0.0": {
+      "mean_entropy": 0.4127,
+      "mean_draft_len": 3.458,
+      "alpha": 0.9463,
+      "speedup_indicative": 1.058
+    },
+    "code T=0.7": {
+      "mean_entropy": 0.2587,
+      "mean_draft_len": 4.011,
+      "alpha": 0.9171,
+      "speedup_indicative": 1.056
+    },
+    "math T=0.0": {
+      "mean_entropy": 0.1928,
+      "mean_draft_len": 4.746,
+      "alpha": 0.9762,
+      "speedup_indicative": 1.109
+    },
+    "math T=0.7": {
+      "mean_entropy": 0.1208,
+      "mean_draft_len": 5.262,
+      "alpha": 0.9796,
+      "speedup_indicative": 1.102
+    },
+    "chat T=0.0": {
+      "mean_entropy": 1.3059,
+      "mean_draft_len": 1.469,
+      "alpha": 0.7685,
+      "speedup_indicative": 0.799
+    },
+    "chat T=0.7": {
+      "mean_entropy": 0.7703,
+      "mean_draft_len": 1.718,
+      "alpha": 0.7474,
+      "speedup_indicative": 0.748
+    }
+  },
+  "acceptance_by_entropy": {
+    "0-0.25": {
+      "acceptance": 0.9879,
+      "tested": 2560,
+      "mean_bound": 0.9463
+    },
+    "0.25-0.5": {
+      "acceptance": 0.8971,
+      "tested": 311,
+      "mean_bound": 0.7373
+    },
+    "0.5-1.0": {
+      "acceptance": 0.6765,
+      "tested": 238,
+      "mean_bound": 0.6188
+    },
+    "1.0-2.0": {
+      "acceptance": 0.5625,
+      "tested": 272,
+      "mean_bound": 0.4641
+    },
+    "2.0-4.0": {
+      "acceptance": 0.3553,
+      "tested": 152,
+      "mean_bound": 0.2692
+    },
+    "4.0-inf": {
+      "acceptance": 0.1429,
+      "tested": 7,
+      "mean_bound": 0.041
+    }
+  },
+  "greedy_matches": "16/18",
+  "lam0_sweep": {
+    "0.3": {
+      "mean_draft_len": 7.565,
+      "alpha": 0.8525,
+      "speedup_indicative": 0.828
+    },
+    "0.5": {
+      "mean_draft_len": 5.789,
+      "alpha": 0.876,
+      "speedup_indicative": 0.865
+    },
+    "0.7": {
+      "mean_draft_len": 4.039,
+      "alpha": 0.8979,
+      "speedup_indicative": 1.023
+    },
+    "0.9": {
+      "mean_draft_len": 2.279,
+      "alpha": 0.8913,
+      "speedup_indicative": 0.936
+    }
+  }
+}

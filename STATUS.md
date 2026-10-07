@@ -2,14 +2,14 @@
 
 Speculative decoding with Qwen2.5-0.5B-Instruct (draft) and Qwen2.5-3B-Instruct (target), batch size 1. See [SPEC.md](SPEC.md) for the plan.
 
-_Last updated: 2026-10-07_
+_Last updated: 2026-10-07 (P4)_
 
 | Phase | What | Status |
 | --- | --- | --- |
 | P1 | Environment, real-model baseline, measured cost ratio `c` | ✅ Done |
 | P2 | Speculative decoding verified on the real models | ✅ Done |
 | P3 | Fixed-γ sweep | ✅ Done |
-| P4 | AdaEDL baseline | Not started |
+| P4 | AdaEDL baseline | ✅ Done |
 | P5 | Adaptive-γ comparison (the O2 claim) | Not started |
 | P6 | Plots and report | Not started |
 
@@ -35,7 +35,7 @@ The first timings were 4–10× too slow. Windows 11 classed the Python process 
 
 ## Tests
 
-`ALL TESTS PASSED`: 8 tests, about 170 s on the GPU.
+`ALL TESTS PASSED`: 11 tests, about 170 s on the GPU.
 
 - **Lossless `verify`:** TV(output, p) = 0.0027 over 40k samples.
 - **Mutation check (SPEC §8):** replacing the residual with p raises that TV to 0.171, and the two-token joint test's TV from 0.023 to 0.119. Both tests catch the bug.
@@ -106,6 +106,68 @@ Files: `results/results.csv` (36 cells, 252 rows), `results/phase3_summary.csv`,
 - **Large γ hurts on chat:** γ = 8 runs at 0.46–0.58× the baseline speed, because at α ≈ 0.72 most of a long draft is thrown away.
 - **Greedy equality:** 99 of 108 speculative greedy runs match the baseline. All 9 mismatches are on chat prompts 1 and 5, the two prompts Phase 2 diagnosed as fp16 near-ties (top-2 logit gap 0.016 and 0.031). Which tied token wins changes with γ, as before.
 
+## Phase 4 results: AdaEDL
+
+**Implementation.** The `AdaEDL` controller in `specdec.py` is a drop-in alternative to `GammaController`, selected in bench.py with `--methods adaedl[:λ0]` and `--max-draft L`. It was implemented from the paper's LaTeX source (arXiv:2410.18351):
+
+- **Stopping rule** (§3, Fig. 1, App. A): before drafting the next token, stop if 1 − √(0.2 · H) < λ, where H is the draft distribution's entropy. 1 − √(0.2 · H) approximates a lower bound on that token's acceptance probability.
+- **Threshold update** (Algorithm 1), after each round: AR ← 0.5 · AR + 0.5 · n_acc / n_drafted. Then λ' = λ + 0.01 if AR < 0.9, else λ − 0.01 if n_acc ≠ L, else λ. Then λ ← 0.9 · λ + 0.1 · λ'. All values are the paper's.
+
+**Choices the paper leaves open:**
+
+- **Greedy mode:** the paper only evaluates sampling. At T = 0 our draft distribution is one-hot (entropy 0), so H is taken from the draft's unscaled softmax.
+- **First guess of a round:** always drafted (min_draft = 1). Checking it too allows rounds with n_drafted = 0, where Algorithm 1's n_acc / n_drafted is 0/0 and λ can lock above the level where drafting resumes.
+- **Other details:** entropy is in nats, and AR starts at the target 0.9.
+- **Initial λ:** the paper sweeps 0.3–0.9 without fixing one value, so λ0 is a parameter; we use 0.7 (see the sweep below).
+
+**Tests:** 3 new tests, all mutation-checked:
+
+- **Stopping rule:** exact on both sides of the threshold, using uniform distributions with known entropy.
+- **λ update:** Algorithm 1 worked by hand over 4 rounds.
+- **Losslessness:** with AdaEDL, greedy output equals the baseline and the sampled two-token joint distribution matches exact enumeration (TV 0.026), with draft lengths that really vary.
+
+Planted bugs that the tests catch: a flipped inequality, an ignored min_draft, swapped ±ε, and AR computed from tested instead of drafted.
+
+**Run.** `phase4.py` ran 18 prompts at T = 0 and 0.7 with λ0 = 0.7 and L = 8, plus a λ0 sweep. Files: `results/phase4_runs.csv`, `results/phase4_steps.csv` (every entropy check), `results/phase4.json`, `results/phase4.log`.
+
+**Done criterion met: AdaEDL drafts less when the draft model's entropy is high.**
+
+| Task | T | Mean entropy H (nats) | Mean draft length | α |
+| --- | --- | --- | --- | --- |
+| Maths | 0 | 0.19 | 4.75 | 0.98 |
+| Maths | 0.7 | 0.12 | 5.26 | 0.98 |
+| Code | 0 | 0.41 | 3.46 | 0.95 |
+| Code | 0.7 | 0.26 | 4.01 | 0.92 |
+| Chat | 0 | 1.31 | 1.47 | 0.77 |
+| Chat | 0.7 | 0.77 | 1.72 | 0.75 |
+
+- **Correlation with draft length:** prompt mean entropy vs mean draft length r = −0.89 (36 runs); per round r = −0.58.
+- **Stop rate of the check by entropy:** 0% below 0.25 nats, 19% at 0.25–0.5, and 100% above 0.5 (λ ≈ 0.7 corresponds to H ≈ 0.45).
+
+**The paper's premise holds on this pair.** Acceptance of a drafted token falls with its entropy, and the bound 1 − √(0.2 · H) stays below the measured acceptance in every bin:
+
+| Entropy bin (nats) | Tested tokens | Measured acceptance | Mean bound |
+| --- | --- | --- | --- |
+| 0–0.25 | 2560 | 0.99 | 0.95 |
+| 0.25–0.5 | 311 | 0.90 | 0.74 |
+| 0.5–1 | 238 | 0.68 | 0.62 |
+| 1–2 | 272 | 0.56 | 0.46 |
+| 2–4 | 152 | 0.36 | 0.27 |
+
+**Greedy equality:** 16 / 18 match. The 2 mismatches are the known fp16 near-ties: chat prompt 1 at token 33 (*"blocks. Break"* vs *"blocks with short"*) and chat prompt 5 at token 19 (*"some key"* vs *"several factors"*). These are the same positions and words as in Phases 2 and 3.
+
+**Initial-λ sweep** (T = 0.7, 2 prompts per task, single runs):
+
+| λ0 | 0.3 | 0.5 | 0.7 | 0.9 |
+| --- | --- | --- | --- | --- |
+| Mean draft length | 7.57 | 5.79 | 4.04 | 2.28 |
+| α | 0.85 | 0.88 | 0.90 | 0.89 |
+| Speed-up (indicative) | 0.83× | 0.87× | **1.02×** | 0.94× |
+
+λ0 = 0.7 is used for Phase 5.
+
+**Early speed signal** (single runs, with entropy logged at every position, so a little pessimistic): AdaEDL reached ~1.06× on code, ~1.10× on maths and ~0.75–0.80× on chat. That is below the best fixed γ from Phase 3 (1.20×, 1.26–1.28×, 1.02–1.15×). The likely reason is that AdaEDL targets an acceptance rate but ignores what a draft step costs. With c ≈ 0.7 on this GPU, its long drafts on easy text (5–6 tokens on maths) are expensive even at α ≈ 0.98. The timed comparison is Phase 5.
+
 ## Open issues
 
 1. **Throughput drifted between sessions and within some cells.** The baseline ran at ~17 tokens/s for code and ~21–23 for maths and chat, presumably because of the machine's background load. Within-cell repeat noise is small for most cells (median CV 1.6–1.8%), but maths prompt 5 reached CV 16%. Speed-ups compare methods within the same cell, but each method's repeats run back to back, so drift can still bias a single cell. **Fix for P5:** interleave methods across repeats (baseline, γ1, γ2, … per repeat) so drift hits every method equally.
@@ -115,9 +177,8 @@ Files: `results/results.csv` (36 cells, 252 rows), `results/phase3_summary.csv`,
 
 ## Next steps
 
-1. P4: implement AdaEDL (arXiv:2410.18351) from the paper, as a drop-in alternative to `GammaController` selectable in bench.py.
-2. P5: adaptive γ versus the best fixed γ (1 for code and chat, 2 for maths) and AdaEDL, with interleaved repeats, c per cell, and the compiled / static-cache draft as an extra arm.
-3. P6: plots (tokens/s vs γ per task, acceptance by draft position from the `pos_*` columns, predicted vs measured speed-up) and the report.
+1. P5: adaptive γ (`--methods adaptive`) versus the best fixed γ (1 for code and chat, 2 for maths) and AdaEDL (`adaedl:0.7`). Interleave repeats across methods, measure c per cell, and add the compiled / static-cache draft as an extra arm.
+2. P6: plots (tokens/s vs γ per task, acceptance by draft position from the `pos_*` columns, predicted vs measured speed-up) and the report.
 
 ## Presentation demo
 
@@ -139,5 +200,6 @@ python -m venv --system-site-packages .venv
 .venv\Scripts\python phase1.py
 .venv\Scripts\python phase2.py
 .venv\Scripts\python bench.py            # Phase 3 sweep
+.venv\Scripts\python phase4.py           # Phase 4: AdaEDL
 .venv\Scripts\python summarize.py
 ```

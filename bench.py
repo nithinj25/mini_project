@@ -15,7 +15,7 @@ import torch
 
 from prompts import PROMPTS
 from winperf import disable_power_throttling
-from specdec import (FixedGamma, GammaController, assert_compatible, baseline_generate,
+from specdec import (AdaEDL, FixedGamma, GammaController, assert_compatible, baseline_generate,
                      mean_std, measure_cost_ratio, predicted_speedup, speculative_generate)
 
 TARGET = "Qwen/Qwen2.5-3B-Instruct"
@@ -112,18 +112,25 @@ class GpuMonitor:
         return sum(self.samples) / len(self.samples) if self.samples else float("nan")
 
 
-def make_controller(method: str, c: float):
+MAX_DRAFT = 8  # L for the adaptive methods; set by --max-draft
+
+
+def make_controller(method: str, c: float, temp: float = 0.0):
+    """fixed:γ | adaptive (cost-ratio-aware, GammaController) | adaedl[:λ0] (entropy early stopping, AdaEDL)."""
     if method.startswith("fixed:"):
         return FixedGamma(int(method.split(":")[1]))
     if method == "adaptive":
-        return GammaController(c=c)
+        return GammaController(c=c, gamma_max=MAX_DRAFT)
+    if method == "adaedl" or method.startswith("adaedl:"):
+        lam0 = float(method.split(":")[1]) if ":" in method else 0.7
+        return AdaEDL(max_draft=MAX_DRAFT, lam0=lam0, temperature=temp)
     raise ValueError(f"unknown method {method!r}")
 
 
 def run_method(method, target, draft, ids, max_new, temp, eos, seed, c):
     if method == "baseline":
         return baseline_generate(target, ids, max_new, temp, eos, seed)
-    return speculative_generate(target, draft, ids, max_new, make_controller(method, c), temp, eos, seed)
+    return speculative_generate(target, draft, ids, max_new, make_controller(method, c, temp), temp, eos, seed)
 
 
 def run_cell(method, target, draft, ids, max_new, temp, eos, seed, c, repeats):
@@ -178,7 +185,9 @@ def main():
     ap.add_argument("--target", default=TARGET)
     ap.add_argument("--draft", default=DRAFT)
     ap.add_argument("--dtype", default="fp16", choices=list(DTYPES))
-    ap.add_argument("--methods", default="baseline,fixed:1,fixed:2,fixed:3,fixed:4,fixed:6,fixed:8")
+    ap.add_argument("--methods", default="baseline,fixed:1,fixed:2,fixed:3,fixed:4,fixed:6,fixed:8",
+                    help="comma list of baseline, fixed:γ, adaptive, adaedl[:λ0]")
+    ap.add_argument("--max-draft", type=int, default=8, help="L, max draft length for adaptive/adaedl")
     ap.add_argument("--tasks", default="code,math,chat")
     ap.add_argument("--temps", default="0,0.7")
     ap.add_argument("--prompts", type=int, default=6, help="prompts per task")
@@ -187,6 +196,8 @@ def main():
     ap.add_argument("--c", type=float, default=None, help="cost ratio; measured if omitted")
     ap.add_argument("--out", default="results/results.csv")
     a = ap.parse_args()
+    global MAX_DRAFT
+    MAX_DRAFT = a.max_draft
 
     disable_power_throttling()
     device = pick_device()
@@ -199,7 +210,7 @@ def main():
         g = torch.Generator().manual_seed(0)
         cells = [("tiny", 0, torch.randint(0, 1000, (32,), generator=g).tolist())]
         eos, a.out, a.repeats, a.max_new, dtype = None, "results/tiny.csv", 2, 48, "fp32"
-        methods, temps = ["fixed:4", "adaptive"], [0.0]
+        methods, temps = ["fixed:4", "adaptive", "adaedl"], [0.0]
     else:
         tok, target, draft = load_pair(a.target, a.draft, a.dtype, device)
         eos, dtype = eos_ids(target), a.dtype

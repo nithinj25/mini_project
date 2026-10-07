@@ -1,0 +1,126 @@
+{
+  "lam0_main": 0.7,
+  "max_draft": 8,
+  "entropy_factor": 0.2,
+  "stop_rate_by_entropy": {
+    "0-0.25": {
+      "stop_rate": 0.0,
+      "checks": 2279
+    },
+    "0.25-0.5": {
+      "stop_rate": 0.1868,
+      "checks": 273
+    },
+    "0.5-1.0": {
+      "stop_rate": 1.0,
+      "checks": 508
+    },
+    "1.0-2.0": {
+      "stop_rate": 1.0,
+      "checks": 433
+    },
+    "2.0-4.0": {
+      "stop_rate": 1.0,
+      "checks": 190
+    },
+    "4.0-inf": {
+      "stop_rate": 1.0,
+      "checks": 12
+    }
+  },
+  "corr_round_entropy_vs_draft_len": -0.5764,
+  "corr_prompt_entropy_vs_draft_len": -0.8892,
+  "by_task": {
+    "code T=0.0": {
+      "mean_entropy": 0.4127,
+      "mean_draft_len": 3.458,
+      "alpha": 0.9463,
+      "speedup_indicative": 1.058
+    },
+    "code T=0.7": {
+      "mean_entropy": 0.2587,
+      "mean_draft_len": 4.011,
+      "alpha": 0.9171,
+      "speedup_indicative": 1.056
+    },
+    "math T=0.0": {
+      "mean_entropy": 0.1928,
+      "mean_draft_len": 4.746,
+      "alpha": 0.9762,
+      "speedup_indicative": 1.109
+    },
+    "math T=0.7": {
+      "mean_entropy": 0.1208,
+      "mean_draft_len": 5.262,
+      "alpha": 0.9796,
+      "speedup_indicative": 1.102
+    },
+    "chat T=0.0": {
+      "mean_entropy": 1.3059,
+      "mean_draft_len": 1.469,
+      "alpha": 0.7685,
+      "speedup_indicative": 0.799
+    },
+    "chat T=0.7": {
+      "mean_entropy": 0.7703,
+      "mean_draft_len": 1.718,
+      "alpha": 0.7474,
+      "speedup_indicative": 0.748
+    }
+  },
+  "acceptance_by_entropy": {
+    "0-0.25": {
+      "acceptance": 0.9879,
+      "tested": 2560,
+      "mean_bound": 0.9463
+    },
+    "0.25-0.5": {
+      "acceptance": 0.8971,
+      "tested": 311,
+      "mean_bound": 0.7373
+    },
+    "0.5-1.0": {
+      "acceptance": 0.6765,
+      "tested": 238,
+      "mean_bound": 0.6188
+    },
+    "1.0-2.0": {
+      "acceptance": 0.5625,
+      "tested": 272,
+      "mean_bound": 0.4641
+    },
+    "2.0-4.0": {
+      "acceptance": 0.3553,
+      "tested": 152,
+      "mean_bound": 0.2692
+    },
+    "4.0-inf": {
+      "acceptance": 0.1429,
+      "tested": 7,
+      "mean_bound": 0.041
+    }
+  },
+  "greedy_matches": "16/18",
+  "lam0_sweep": {
+    "0.3": {
+      "mean_draft_len": 7.565,
+      "alpha": 0.8525,
+      "speedup_indicative": 0.828
+    },
+    "0.5": {
+      "mean_draft_len": 5.789,
+      "alpha": 0.876,
+      "speedup_indicative": 0.865
+    },
+    "0.7": {
+      "mean_draft_len": 4.039,
+      "alpha": 0.8979,
+      "speedup_indicative": 1.023
+    },
+    "0.9": {
+      "mean_draft_len": 2.279,
+      "alpha": 0.8913,
+      "speedup_indicative": 0.936
+    }
+  }
+}
