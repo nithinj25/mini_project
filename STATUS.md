@@ -2,7 +2,7 @@
 
 Speculative decoding with Qwen2.5-0.5B-Instruct (draft) and Qwen2.5-3B-Instruct (target), batch size 1. See [SPEC.md](SPEC.md) for the plan.
 
-_Last updated: 2026-10-07 (P4)_
+_Last updated: 2026-10-10 (P5)_
 
 | Phase | What | Status |
 | --- | --- | --- |
@@ -10,7 +10,7 @@ _Last updated: 2026-10-07 (P4)_
 | P2 | Speculative decoding verified on the real models | ✅ Done |
 | P3 | Fixed-γ sweep | ✅ Done |
 | P4 | AdaEDL baseline | ✅ Done |
-| P5 | Adaptive-γ comparison (the O2 claim) | Not started |
+| P5 | Adaptive-γ comparison (the O2 claim) | ✅ Done: **O2 not supported** (ties the best fixed γ, beats AdaEDL) |
 | P6 | Plots and report | Not started |
 
 ## Setup
@@ -168,17 +168,67 @@ Planted bugs that the tests catch: a flipped inequality, an ignored min_draft, s
 
 **Early speed signal** (single runs, with entropy logged at every position, so a little pessimistic): AdaEDL reached ~1.06× on code, ~1.10× on maths and ~0.75–0.80× on chat. That is below the best fixed γ from Phase 3 (1.20×, 1.26–1.28×, 1.02–1.15×). The likely reason is that AdaEDL targets an acceptance rate but ignores what a draft step costs. With c ≈ 0.7 on this GPU, its long drafts on easy text (5–6 tokens on maths) are expensive even at α ≈ 0.98. The timed comparison is Phase 5.
 
+## Phase 5 results: the O2 claim
+
+**The claim:** cost-ratio-aware adaptive γ gives higher tokens/s than (a) the best fixed γ and (b) AdaEDL.
+
+**Verdict: O2 is not supported on this pair and GPU.** Adaptive γ shows **no detectable difference from the best fixed γ**, and it **clearly beats AdaEDL**. The decision rule was committed to git before any Phase 5 measurement (commit `26dc6f9`, see the `phase5.py` docstring), and the adaptive controller was used exactly as written in Phase 1, with no tuning.
+
+**Protocol:**
+
+- **Cells:** 36 (3 tasks × 6 prompts × T ∈ {0, 0.7}), 128 new tokens.
+- **Methods:** baseline, fixed γ = 1 and 2, adaptive, and AdaEDL (λ0 = 0.7).
+- **c:** measured in every cell (mean 0.70, sd 0.08).
+- **Timing:** every method warmed up, then 3 repeats with the method order rotated between repeats. Speed-ups are paired by repeat.
+- **Files:** `results/phase5.csv`, `results/phase5_summary.json`, `results/phase5.log`.
+
+**Paired comparison**, d = speed-up(adaptive) − speed-up(opponent) per cell, with a 95% t-interval:
+
+| Adaptive vs | Cells | Mean d | 95% CI | Adaptive wins | Verdict |
+| --- | --- | --- | --- | --- | --- |
+| **(a) Best fixed γ, chosen a priori** (1 code/chat, 2 maths) | 36 | −0.011 | [−0.039, +0.018] | 17 / 36 | no detectable difference |
+| **(b) AdaEDL** (λ0 = 0.7) | 36 | **+0.178** | **[+0.134, +0.223]** | 33 / 36 | **beats** |
+| Per-cell oracle best of fixed 1/2 (chosen after the fact) | 36 | −0.027 | [−0.054, +0.001] | 14 / 36 | no detectable difference |
+
+By task, adaptive vs AdaEDL: code +0.15, maths +0.08, chat +0.30, each with a CI above 0. Adaptive vs the a-priori best fixed γ has CIs containing 0 for every task.
+
+**Speed-up by method** (mean across prompts):
+
+| Task | T | Fixed γ=1 | Fixed γ=2 | Adaptive (mean γ) | AdaEDL (mean draft) |
+| --- | --- | --- | --- | --- | --- |
+| Code | 0 | 1.22 | 1.22 | 1.24 (2.2) | 1.08 (3.5) |
+| Code | 0.7 | 1.20 | 1.16 | 1.18 (1.6) | 1.03 (4.0) |
+| Maths | 0 | 1.26 | 1.25 | 1.25 (2.4) | 1.11 (4.8) |
+| Maths | 0.7 | 1.22 | 1.25 | 1.20 (2.3) | 1.18 (5.4) |
+| Chat | 0 | 1.09 | 0.99 | 1.09 (1.0) | 0.76 (1.5) |
+| Chat | 0.7 | 1.09 | 0.97 | 1.07 (1.0) | 0.80 (1.7) |
+
+Greedy output matches the baseline in 34–35 of 36 cells per method. The misses are the known fp16 near-ties on chat prompts 1 and 5.
+
+**Why adaptive γ does not beat the best fixed γ:**
+
+1. **The speed-up curve is flat near its peak.** With c ≈ 0.7 and α ≈ 0.9–0.95, the formula gives γ = 1, 2 and 3 within ~3–4% of each other (Phase 1 table, Phase 3 sweep). Adaptive γ settles in that flat region: about 1.0 on chat, where it correctly drops to the minimum, and 1.6–2.4 on code and maths. So it lands on essentially the same speed as the best fixed γ. The gains adaptivity can find are smaller than run-to-run timing noise on a laptop (per-cell paired sd ≈ 0.05–0.1).
+2. **The fixed opponent had an advantage.** Its γ was picked per task from the Phase 3 sweep, after seeing the data. Adaptive γ has to discover the right value online in each 128-token generation, starting from a prior of α = 0.7.
+3. **Adaptivity does help where prompts differ a lot.** On easy prompts it raises γ: code prompt 1 went from 1.50× (γ = 1) to 1.60× (γ ≈ 3.5). It also drops to γ = 1 on chat. On average these per-prompt gains are cancelled by noise and the cost of learning α̂ during each generation.
+
+**Why AdaEDL loses** (consistent with Phase 4):
+
+1. **It ignores the cost of drafting.** It drafts long whenever the draft model is confident (4.8–5.4 tokens on maths at α ≈ 0.98), which is too long when a draft step costs ~70% of a target step.
+2. **Stopping wastes a draft pass.** To decide whether to stop, it runs the draft model for the next position and then discards that pass. From the Phase 4 logs, 97% of chat rounds end in an early stop, so **38% of all draft passes on chat are wasted** (19% on code, 10% on maths). This is why it falls below 1× on chat even though its drafts are short.
+3. **The formula overpredicts it** (predicted 1.20–1.32× vs measured 1.03–1.18×), because S = E / (1 + γc) counts neither the discarded pass nor the entropy computation.
+
+**When the claim could hold:** a cheaper draft would make the curve steeper and the best γ larger and more prompt-dependent, which is where online adaptation pays. A lower c could come from a compiled or static-cache draft, or from a larger target. See the open issues.
+
 ## Open issues
 
-1. **Throughput drifted between sessions and within some cells.** The baseline ran at ~17 tokens/s for code and ~21–23 for maths and chat, presumably because of the machine's background load. Within-cell repeat noise is small for most cells (median CV 1.6–1.8%), but maths prompt 5 reached CV 16%. Speed-ups compare methods within the same cell, but each method's repeats run back to back, so drift can still bias a single cell. **Fix for P5:** interleave methods across repeats (baseline, γ1, γ2, … per repeat) so drift hits every method equally.
-2. **`c` was measured once per session** (0.734, then 0.753), while Phase 1 gave 0.693 ± 0.029. Predictions use the c logged in each row. Re-measure c per cell in P5.
-3. **The fp32 recheck is impossible on 8 GB.** Phases 2 and 3 use the near-tie logit-gap analysis instead.
-4. **High `c` limits the headroom.** A compiled or static-cache draft (P5) is the main lever.
+1. **Compiled or static-cache draft (SPEC §7, required because c > 0.5): not done.** `torch.compile` needs Triton, which is not installed and has no official Windows build. Options: the community `triton-windows` package, manual CUDA-graph capture of the draft's decode step with a static KV cache, or a Linux/WSL2 machine. This is the lever most likely to change the O2 result, because it lowers c.
+2. **Laptop timing noise.** Phase 5 controls drift by interleaving and pairing, but per-cell noise (~0.05–0.1 in speed-up) is still larger than the differences adaptive γ could exploit.
+3. **The fp32 recheck is impossible on 8 GB.** Phases 2–5 use the near-tie logit-gap analysis instead; the same two chat prompts account for every greedy mismatch.
 
 ## Next steps
 
-1. P5: adaptive γ (`--methods adaptive`) versus the best fixed γ (1 for code and chat, 2 for maths) and AdaEDL (`adaedl:0.7`). Interleave repeats across methods, measure c per cell, and add the compiled / static-cache draft as an extra arm.
-2. P6: plots (tokens/s vs γ per task, acceptance by draft position from the `pos_*` columns, predicted vs measured speed-up) and the report.
+1. P6: plots (tokens/s vs γ per task, acceptance by draft position from the `pos_*` columns, predicted vs measured speed-up including adaptive and AdaEDL) and the report, with every number traced to `results/results.csv` (P3) or `results/phase5.csv` (P5).
+2. Optional: the compiled-draft arm (open issue 1), to test whether a lower c changes the O2 verdict.
 
 ## Presentation demo
 
@@ -201,5 +251,6 @@ python -m venv --system-site-packages .venv
 .venv\Scripts\python phase2.py
 .venv\Scripts\python bench.py            # Phase 3 sweep
 .venv\Scripts\python phase4.py           # Phase 4: AdaEDL
+.venv\Scripts\python phase5.py           # Phase 5: O2 comparison
 .venv\Scripts\python summarize.py
 ```
