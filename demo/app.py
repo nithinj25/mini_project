@@ -4,7 +4,7 @@
 
 Page 1 streams the 3B model alone; page 2 streams speculative decoding (0.5B drafts, 3B verifies)
 with accepted guesses highlighted and compares against page 1's run of the same prompt; page 3
-shows the measured results from results/results.csv. Timings exclude display time (on_round hook).
+shows the measured results from results/. Timings exclude display time (on_round hook).
 """
 import os
 import sys

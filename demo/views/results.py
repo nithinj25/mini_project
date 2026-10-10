@@ -1,4 +1,5 @@
-"""Page 3: measured Phase 3 results from results/results.csv."""
+"""Page 3: measured results (Phase 3 sweep, Phase 4-5b comparisons) from results/."""
+import json
 import os
 
 import pandas as pd
@@ -11,7 +12,7 @@ from common import RESULTS, TASK_COLORS, TASK_NAMES
 @st.cache_data
 def load_results():
     summ = pd.read_csv(os.path.join(RESULTS, "phase3_summary.csv"))
-    rows = pd.read_csv(os.path.join(RESULTS, "results.csv"))
+    rows = pd.read_csv(os.path.join(RESULTS, "phase3.csv"))
     return summ, rows
 
 
@@ -26,7 +27,7 @@ def styled(fig, title, ytitle, xtitle):
 def page_results():
     st.title("Results")
     st.markdown("RTX 4060 Laptop GPU · fp16 · batch size 1 · 128 new tokens · 6 prompts per task · "
-                "warm-up + 3 repeats per measurement. Every number comes from `results/results.csv`.")
+                "warm-up + 3 repeats per measurement. Every number comes from `results/phase3.csv` (phase P3 of `results/results.csv`).")
     summ, rows = load_results()
     fixed = summ[summ["method"].str.startswith("fixed")].copy()
     fixed["gamma"] = fixed["gamma"].astype(int)
@@ -119,4 +120,63 @@ def page_results():
         st.dataframe(summ[summ.temperature == temp], hide_index=True, use_container_width=True)
 
 
+METHOD_NAMES = {"adaptive": "Adaptive γ (ours)", "adaedl:0.7": "AdaEDL"}
+
+
+def load_json(name):
+    path = os.path.join(RESULTS, name)
+    return json.load(open(path, encoding="utf-8")) if os.path.exists(path) else None
+
+
+def verdict_metric(col, label, comp):
+    lo, hi = comp["ci95"]
+    col.metric(label, f"{comp['mean_diff']:+.3f}")
+    col.caption(f"95% CI [{lo:+.3f}, {hi:+.3f}] · wins {comp['wins']}/{comp['n']} · **{comp['verdict'].replace(' vs', '')}**")
+
+
+def method_chart(summary, temp, title, fixed_order):
+    fig = go.Figure()
+    methods = fixed_order + ["adaptive", "adaedl:0.7"]
+    labels = [METHOD_NAMES.get(m, m.replace("fixed:", "fixed γ=")) for m in methods]
+    for k, task in enumerate(["code", "math", "chat"]):  # methods are categories: dots, offset per task, no lines
+        ys = [summary["table"].get(f"{task} T={temp} {m}", {}).get("speedup") for m in methods]
+        fig.add_trace(go.Scatter(x=[i + (k - 1) * 0.18 for i in range(len(methods))], y=ys, customdata=labels,
+                                 name=TASK_NAMES[task], mode="markers",
+                                 marker=dict(size=11, color=TASK_COLORS[task], line=dict(width=1.5, color="white")),
+                                 hovertemplate="%{customdata}: %{y:.2f}×<extra>%{fullData.name}</extra>"))
+    fig.update_xaxes(tickmode="array", tickvals=list(range(len(methods))), ticktext=labels)
+    fig.add_trace(go.Scatter(x=[-0.5, len(methods) - 0.5], y=[1, 1], mode="lines", name="base model (1×)",
+                             hoverinfo="skip", line=dict(color="#8a8984", width=1.5, dash="dash")))
+    return styled(fig, title, "speed-up (×)", "")
+
+
+def page_comparison():
+    st.divider()
+    st.header("Does adaptive γ beat the alternatives? (the O2 test)")
+    st.markdown("Every method runs on the same 36 cells (3 tasks × 6 prompts × 2 temperatures), interleaved, "
+                "with the decision rule committed to git **before** each run. A difference counts only if its "
+                "95% confidence interval excludes 0.")
+    p5, p5b = load_json("phase5_summary.json"), load_json("phase5b_summary.json")
+    temp = st.session_state.get("res_temp", 0.0)
+    if p5:
+        st.subheader("With the ordinary draft model (c ≈ 0.70)")
+        a, b = st.columns(2)
+        verdict_metric(a, "vs best fixed γ", p5["comparisons"]["best_fixed_a_priori"]["all"])
+        verdict_metric(b, "vs AdaEDL", p5["comparisons"]["adaedl"]["all"])
+        st.plotly_chart(method_chart(p5, temp, f"Speed-up by method, T = {temp:g}", ["fixed:1", "fixed:2"]),
+                        use_container_width=True)
+        st.caption("The 0.5B costs ~70% of a 3B step, so γ = 1–3 all give about the same speed: there is nothing "
+                   "for adaptation to gain. AdaEDL drafts too long and discards a draft pass at every early stop.")
+    if p5b:
+        st.subheader(f"With the CUDA-graph draft (c ≈ {p5b['c_per_cell']['mean']:.2f})")
+        a, b = st.columns(2)
+        verdict_metric(a, "vs best fixed γ (picked after the fact)", p5b["comparisons"]["best_fixed_per_task_after_the_fact"]["all"])
+        verdict_metric(b, "vs AdaEDL", p5b["comparisons"]["adaedl"]["all"])
+        st.plotly_chart(method_chart(p5b, temp, f"Speed-up by method, T = {temp:g}",
+                                     ["fixed:2", "fixed:4", "fixed:6", "fixed:8"]), use_container_width=True)
+        st.caption("Capturing the draft's decode step as one CUDA graph removes the kernel-launch overhead: "
+                   "the 0.5B now costs ~12% of a 3B step, speed-ups reach 2–5×, and the best γ differs by task.")
+
+
 page_results()
+page_comparison()

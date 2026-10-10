@@ -1,9 +1,9 @@
-"""Aggregate results/results.csv per (task, temperature, method): the Phase 3 table (SPEC §6).
+"""Aggregate results/phase3.csv per (task, temperature, method): the Phase 3 table (SPEC §6).
 
-  python summarize.py [--csv results/results.csv] [--out results/phase3_summary.csv]
+  python summarize.py [--csv results/phase3.csv] [--out results/phase3_summary.csv]
 
 Speed-ups are per prompt (method tokens/s ÷ that prompt's baseline tokens/s), then averaged,
-so a slow prompt does not dominate. Every number here traces back to rows of results.csv.
+so a slow prompt does not dominate. Every number here traces back to rows of results/phase3.csv (phase P3 of results/results.csv).
 """
 import argparse
 import csv
@@ -18,7 +18,7 @@ def gamma_of(method: str):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--csv", default="results/results.csv")
+    ap.add_argument("--csv", default="results/phase3.csv")
     ap.add_argument("--out", default="results/phase3_summary.csv")
     a = ap.parse_args()
     rows = list(csv.DictReader(open(a.csv, encoding="utf-8")))

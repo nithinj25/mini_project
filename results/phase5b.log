@@ -1,0 +1,222 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:   0%|          | 1/434 [00:00<03:32,  2.04it/s]Loading weights:   5%|▍         | 21/434 [00:00<00:09, 43.91it/s]Loading weights:   7%|▋         | 31/434 [00:00<00:08, 45.41it/s]Loading weights:   9%|▉         | 39/434 [00:01<00:09, 41.00it/s]Loading weights:  10%|█         | 45/434 [00:01<00:10, 38.67it/s]Loading weights:  12%|█▏        | 51/434 [00:01<00:09, 41.32it/s]Loading weights:  13%|█▎        | 58/434 [00:01<00:07, 47.23it/s]Loading weights:  15%|█▍        | 64/434 [00:01<00:08, 41.85it/s]Loading weights:  17%|█▋        | 72/434 [00:01<00:09, 39.61it/s]Loading weights:  19%|█▉        | 82/434 [00:02<00:08, 42.53it/s]Loading weights:  20%|██        | 87/434 [00:02<00:08, 41.15it/s]Loading weights:  22%|██▏       | 95/434 [00:02<00:08, 39.01it/s]Loading weights:  25%|██▍       | 107/434 [00:02<00:08, 40.54it/s]Loading weights:  27%|██▋       | 116/434 [00:02<00:06, 46.05it/s]Loading weights:  28%|██▊       | 121/434 [00:03<00:07, 40.66it/s]Loading weights:  30%|███       | 131/434 [00:03<00:06, 44.95it/s]Loading weights:  31%|███▏      | 136/434 [00:03<00:06, 43.82it/s]Loading weights:  33%|███▎      | 143/434 [00:03<00:07, 38.42it/s]Loading weights:  34%|███▍      | 148/434 [00:03<00:09, 30.25it/s]Loading weights:  38%|███▊      | 167/434 [00:04<00:05, 48.00it/s]Loading weights:  40%|███▉      | 173/434 [00:04<00:05, 48.60it/s]Loading weights:  41%|████      | 179/434 [00:04<00:05, 46.44it/s]Loading weights:  42%|████▏     | 184/434 [00:04<00:05, 47.02it/s]Loading weights:  44%|████▍     | 190/434 [00:04<00:05, 42.86it/s]Loading weights:  45%|████▍     | 195/434 [00:04<00:05, 42.21it/s]Loading weights:  47%|████▋     | 203/434 [00:04<00:05, 39.26it/s]Loading weights:  49%|████▉     | 213/434 [00:05<00:04, 47.17it/s]Loading weights:  50%|█████     | 218/434 [00:05<00:05, 41.85it/s]Loading weights:  52%|█████▏    | 227/434 [00:05<00:04, 43.07it/s]Loading weights:  53%|█████▎    | 232/434 [00:05<00:04, 41.08it/s]Loading weights:  55%|█████▌    | 239/434 [00:05<00:05, 35.75it/s]Loading weights:  57%|█████▋    | 249/434 [00:06<00:04, 39.68it/s]Loading weights:  59%|█████▉    | 255/434 [00:06<00:04, 43.06it/s]Loading weights:  60%|██████    | 261/434 [00:06<00:03, 44.50it/s]Loading weights:  61%|██████▏   | 266/434 [00:06<00:04, 40.46it/s]Loading weights:  63%|██████▎   | 275/434 [00:06<00:04, 36.34it/s]Loading weights:  66%|██████▌   | 287/434 [00:07<00:03, 38.76it/s]Loading weights:  69%|██████▉   | 299/434 [00:07<00:03, 38.99it/s]Loading weights:  71%|███████▏  | 310/434 [00:07<00:02, 46.13it/s]Loading weights:  73%|███████▎  | 315/434 [00:07<00:02, 40.36it/s]Loading weights:  74%|███████▍  | 322/434 [00:07<00:03, 34.43it/s]Loading weights:  77%|███████▋  | 335/434 [00:08<00:02, 37.77it/s]Loading weights:  80%|███████▉  | 347/434 [00:08<00:02, 39.32it/s]Loading weights:  82%|████████▏ | 357/434 [00:08<00:01, 41.16it/s]Loading weights:  84%|████████▎ | 363/434 [00:08<00:01, 43.41it/s]Loading weights:  85%|████████▌ | 369/434 [00:09<00:01, 36.19it/s]Loading weights:  88%|████████▊ | 383/434 [00:09<00:01, 49.27it/s]Loading weights:  90%|████████▉ | 389/434 [00:09<00:01, 41.97it/s]Loading weights:  91%|█████████ | 396/434 [00:09<00:00, 38.84it/s]Loading weights:  92%|█████████▏| 401/434 [00:09<00:00, 40.04it/s]Loading weights:  94%|█████████▍| 408/434 [00:10<00:00, 36.21it/s]Loading weights:  95%|█████████▌| 413/434 [00:10<00:00, 37.44it/s]Loading weights:  97%|█████████▋| 420/434 [00:10<00:00, 35.61it/s]Loading weights: 100%|██████████| 434/434 [00:10<00:00, 41.35it/s]
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:00<00:38,  7.59it/s]Loading weights:  12%|█▏        | 34/290 [00:00<00:01, 162.90it/s]Loading weights:  20%|█▉        | 57/290 [00:00<00:01, 180.29it/s]Loading weights:  26%|██▌       | 76/290 [00:00<00:01, 183.17it/s]Loading weights:  33%|███▎      | 95/290 [00:00<00:01, 179.74it/s]Loading weights:  41%|████      | 119/290 [00:00<00:00, 181.58it/s]Loading weights:  49%|████▉     | 142/290 [00:00<00:00, 188.96it/s]Loading weights:  58%|█████▊    | 167/290 [00:00<00:00, 181.40it/s]Loading weights:  65%|██████▌   | 189/290 [00:01<00:00, 187.72it/s]Loading weights:  72%|███████▏  | 208/290 [00:01<00:00, 179.71it/s]Loading weights:  79%|███████▉  | 229/290 [00:01<00:00, 183.89it/s]Loading weights:  87%|████████▋ | 251/290 [00:01<00:00, 187.51it/s]Loading weights:  94%|█████████▍| 273/290 [00:01<00:00, 179.02it/s]Loading weights: 100%|██████████| 290/290 [00:01<00:00, 185.36it/s]
+code p0 T=0.0 c=0.1198: baseline x1.00  fixed:2 x2.07(γ̄2.0)  fixed:4 x2.57(γ̄3.9)  fixed:6 x2.96(γ̄5.8)  fixed:8 x2.86(γ̄8.0)  adaptive x2.75(γ̄6.0)  adaedl:0.7 x2.31(γ̄3.5)
+code p0 T=0.7 c=0.081: baseline x1.00  fixed:2 x2.19(γ̄2.0)  fixed:4 x2.78(γ̄4.0)  fixed:6 x3.52(γ̄5.7)  fixed:8 x3.78(γ̄7.7)  adaptive x3.38(γ̄7.0)  adaedl:0.7 x3.94(γ̄5.1)
+code p1 T=0.0 c=0.0896: baseline x1.00  fixed:2 x2.21(γ̄2.0)  fixed:4 x2.67(γ̄3.9)  fixed:6 x3.21(γ̄6.0)  fixed:8 x3.92(γ̄7.8)  adaptive x2.74(γ̄7.0)  adaedl:0.7 x2.92(γ̄3.6)
+code p1 T=0.7 c=0.1105: baseline x1.00  fixed:2 x2.46(γ̄2.0)  fixed:4 x3.34(γ̄3.9)  fixed:6 x3.06(γ̄5.8)  fixed:8 x3.35(γ̄7.8)  adaptive x4.15(γ̄6.6)  adaedl:0.7 x3.03(γ̄3.7)
+code p2 T=0.0 c=0.127: baseline x1.00  fixed:2 x2.19(γ̄2.0)  fixed:4 x2.78(γ̄4.0)  fixed:6 x3.35(γ̄5.9)  fixed:8 x3.99(γ̄7.8)  adaptive x3.53(γ̄7.0)  adaedl:0.7 x3.16(γ̄5.1)
+code p2 T=0.7 c=0.0982: baseline x1.00  fixed:2 x2.26(γ̄2.0)  fixed:4 x2.65(γ̄3.9)  fixed:6 x3.58(γ̄5.8)  fixed:8 x3.69(γ̄7.5)  adaptive x4.20(γ̄7.4)  adaedl:0.7 x3.63(γ̄5.0)
+code p3 T=0.0 c=0.1042: baseline x1.00  fixed:2 x2.22(γ̄2.0)  fixed:4 x2.54(γ̄3.9)  fixed:6 x3.08(γ̄5.9)  fixed:8 x3.20(γ̄7.9)  adaptive x3.23(γ̄5.1)  adaedl:0.7 x3.00(γ̄3.5)
+code p3 T=0.7 c=0.1175: baseline x1.00  fixed:2 x2.00(γ̄2.0)  fixed:4 x2.49(γ̄3.9)  fixed:6 x2.44(γ̄6.0)  fixed:8 x2.83(γ̄8.0)  adaptive x3.01(γ̄5.1)  adaedl:0.7 x2.80(γ̄3.7)
+code p4 T=0.0 c=0.1032: baseline x1.00  fixed:2 x2.07(γ̄2.0)  fixed:4 x2.45(γ̄3.9)  fixed:6 x2.17(γ̄5.8)  fixed:8 x2.51(γ̄7.8)  adaptive x2.39(γ̄5.1)  adaedl:0.7 x2.01(γ̄1.8)
+code p4 T=0.7 c=0.1248: baseline x1.00  fixed:2 x2.16(γ̄2.0)  fixed:4 x2.87(γ̄4.0)  fixed:6 x3.35(γ̄5.8)  fixed:8 x2.82(γ̄7.8)  adaptive x2.86(γ̄3.9)  adaedl:0.7 x2.27(γ̄2.0)
+code p5 T=0.0 c=0.1124: baseline x1.00  fixed:2 x2.40(γ̄2.0)  fixed:4 x3.09(γ̄4.0)  fixed:6 x3.40(γ̄5.8)  fixed:8 x3.83(γ̄7.8)  adaptive x3.37(γ̄6.4)  adaedl:0.7 x3.14(γ̄3.2)
+code p5 T=0.7 c=0.1317: baseline x1.00  fixed:2 x2.51(γ̄2.0)  fixed:4 x3.12(γ̄3.9)  fixed:6 x3.69(γ̄5.9)  fixed:8 x3.24(γ̄7.7)  adaptive x3.52(γ̄6.0)  adaedl:0.7 x3.16(γ̄4.4)
+math p0 T=0.0 c=0.0565: baseline x1.00  fixed:2 x2.49(γ̄2.0)  fixed:4 x3.93(γ̄3.9)  fixed:6 x4.25(γ̄5.8)  fixed:8 x5.03(γ̄7.9)  adaptive x4.93(γ̄7.3)  adaedl:0.7 x4.13(γ̄4.7)
+math p0 T=0.7 c=0.0585: baseline x1.00  fixed:2 x2.33(γ̄2.0)  fixed:4 x2.61(γ̄3.9)  fixed:6 x3.05(γ̄6.0)  fixed:8 x3.10(γ̄7.9)  adaptive x3.73(γ̄6.9)  adaedl:0.7 x3.26(γ̄6.1)
+math p1 T=0.0 c=0.0845: baseline x1.00  fixed:2 x2.07(γ̄2.0)  fixed:4 x2.70(γ̄4.0)  fixed:6 x2.89(γ̄5.9)  fixed:8 x2.64(γ̄7.8)  adaptive x2.79(γ̄7.0)  adaedl:0.7 x2.68(γ̄5.0)
+math p1 T=0.7 c=0.0794: baseline x1.00  fixed:2 x2.37(γ̄2.0)  fixed:4 x3.53(γ̄3.9)  fixed:6 x3.53(γ̄5.8)  fixed:8 x2.95(γ̄7.7)  adaptive x3.64(γ̄7.2)  adaedl:0.7 x3.84(γ̄5.7)
+math p2 T=0.0 c=0.0633: baseline x1.00  fixed:2 x2.56(γ̄2.0)  fixed:4 x3.01(γ̄3.9)  fixed:6 x3.22(γ̄5.8)  fixed:8 x3.32(γ̄7.9)  adaptive x3.28(γ̄7.4)  adaedl:0.7 x3.08(γ̄4.8)
+math p2 T=0.7 c=0.0869: baseline x1.00  fixed:2 x2.76(γ̄2.0)  fixed:4 x3.41(γ̄4.0)  fixed:6 x3.87(γ̄5.9)  fixed:8 x4.12(γ̄7.6)  adaptive x3.46(γ̄6.6)  adaedl:0.7 x3.96(γ̄5.0)
+math p3 T=0.0 c=0.0773: baseline x1.00  fixed:2 x2.55(γ̄2.0)  fixed:4 x3.25(γ̄3.9)  fixed:6 x3.48(γ̄5.9)  fixed:8 x3.59(γ̄7.9)  adaptive x3.89(γ̄7.3)  adaedl:0.7 x3.36(γ̄3.7)
+math p3 T=0.7 c=0.0688: baseline x1.00  fixed:2 x2.28(γ̄2.0)  fixed:4 x2.81(γ̄4.0)  fixed:6 x3.03(γ̄5.7)  fixed:8 x3.25(γ̄7.9)  adaptive x2.66(γ̄7.1)  adaedl:0.7 x2.63(γ̄4.3)
+math p4 T=0.0 c=0.0638: baseline x1.00  fixed:2 x1.99(γ̄2.0)  fixed:4 x2.33(γ̄3.9)  fixed:6 x2.49(γ̄5.8)  fixed:8 x2.76(γ̄7.6)  adaptive x2.67(γ̄7.2)  adaedl:0.7 x2.70(γ̄4.8)
+math p4 T=0.7 c=0.0635: baseline x1.00  fixed:2 x2.33(γ̄2.0)  fixed:4 x3.20(γ̄3.9)  fixed:6 x3.14(γ̄5.7)  fixed:8 x3.32(γ̄7.6)  adaptive x3.63(γ̄7.3)  adaedl:0.7 x3.03(γ̄4.6)
+math p5 T=0.0 c=0.1022: baseline x1.00  fixed:2 x2.19(γ̄2.0)  fixed:4 x3.02(γ̄4.0)  fixed:6 x3.84(γ̄6.0)  fixed:8 x3.57(γ̄7.8)  adaptive x3.65(γ̄7.4)  adaedl:0.7 x3.52(γ̄5.5)
+math p5 T=0.7 c=0.0994: baseline x1.00  fixed:2 x2.54(γ̄2.0)  fixed:4 x3.40(γ̄4.0)  fixed:6 x3.87(γ̄5.6)  fixed:8 x4.29(γ̄7.6)  adaptive x3.18(γ̄7.0)  adaedl:0.7 x4.15(γ̄7.0)
+chat p0 T=0.0 c=0.1103: baseline x1.00  fixed:2 x2.14(γ̄2.0)  fixed:4 x2.21(γ̄4.0)  fixed:6 x2.37(γ̄5.9)  fixed:8 x2.23(γ̄7.9)  adaptive x2.22(γ̄5.1)  adaedl:0.7 x2.10(γ̄1.4)
+chat p0 T=0.7 c=0.0872: baseline x1.00  fixed:2 x2.33(γ̄2.0)  fixed:4 x2.20(γ̄4.0)  fixed:6 x2.67(γ̄5.9)  fixed:8 x2.36(γ̄7.6)  adaptive x2.39(γ̄4.7)  adaedl:0.7 x2.14(γ̄1.8)
+chat p1 T=0.0 c=0.0931: baseline x1.00  fixed:2 x2.50(γ̄1.9)  fixed:4 x2.35(γ̄3.9)  fixed:6 x2.41(γ̄5.8)  fixed:8 x2.68(γ̄7.7)  adaptive x2.17(γ̄5.0)  adaedl:0.7 x2.20(γ̄1.6)
+chat p1 T=0.7 c=0.0652: baseline x1.00  fixed:2 x2.35(γ̄2.0)  fixed:4 x2.54(γ̄3.9)  fixed:6 x2.27(γ̄6.0)  fixed:8 x2.65(γ̄7.9)  adaptive x2.51(γ̄6.2)  adaedl:0.7 x2.28(γ̄1.6)
+chat p2 T=0.0 c=0.1065: baseline x1.00  fixed:2 x2.14(γ̄1.9)  fixed:4 x2.13(γ̄3.9)  fixed:6 x1.98(γ̄5.9)  fixed:8 x1.79(γ̄7.8)  adaptive x2.22(γ̄3.2)  adaedl:0.7 x1.91(γ̄1.6)
+chat p2 T=0.7 c=0.0551: baseline x1.00  fixed:2 x2.35(γ̄2.0)  fixed:4 x2.47(γ̄3.9)  fixed:6 x2.33(γ̄5.8)  fixed:8 x2.05(γ̄7.9)  adaptive x2.15(γ̄4.9)  adaedl:0.7 x2.40(γ̄1.6)
+chat p3 T=0.0 c=0.0922: baseline x1.00  fixed:2 x2.36(γ̄2.0)  fixed:4 x2.82(γ̄4.0)  fixed:6 x2.30(γ̄6.0)  fixed:8 x2.16(γ̄8.0)  adaptive x2.41(γ̄4.2)  adaedl:0.7 x2.09(γ̄1.3)
+chat p3 T=0.7 c=0.0811: baseline x1.00  fixed:2 x2.23(γ̄2.0)  fixed:4 x2.13(γ̄4.0)  fixed:6 x1.87(γ̄6.0)  fixed:8 x1.60(γ̄8.0)  adaptive x1.77(γ̄4.0)  adaedl:0.7 x1.78(γ̄2.0)
+chat p4 T=0.0 c=0.0787: baseline x1.00  fixed:2 x1.68(γ̄1.9)  fixed:4 x1.80(γ̄3.9)  fixed:6 x1.63(γ̄5.8)  fixed:8 x1.59(γ̄7.7)  adaptive x1.76(γ̄4.6)  adaedl:0.7 x1.38(γ̄1.5)
+chat p4 T=0.7 c=0.061: baseline x1.00  fixed:2 x2.10(γ̄2.0)  fixed:4 x2.45(γ̄3.9)  fixed:6 x2.25(γ̄5.9)  fixed:8 x1.75(γ̄7.8)  adaptive x1.81(γ̄5.5)  adaedl:0.7 x1.75(γ̄1.6)
+chat p5 T=0.0 c=0.097: baseline x1.00  fixed:2 x2.20(γ̄2.0)  fixed:4 x2.55(γ̄4.0)  fixed:6 x2.39(γ̄5.9)  fixed:8 x2.23(γ̄7.9)  adaptive x2.55(γ̄4.3)  adaedl:0.7 x1.95(γ̄1.4)
+chat p5 T=0.7 c=0.0782: baseline x1.00  fixed:2 x2.28(γ̄2.0)  fixed:4 x2.14(γ̄3.8)  fixed:6 x1.86(γ̄5.9)  fixed:8 x2.23(γ̄7.9)  adaptive x2.46(γ̄5.7)  adaedl:0.7 x2.26(γ̄1.8)
+{
+  "cells": 36,
+  "best_fixed_per_task": {
+    "code": "fixed:8",
+    "math": "fixed:8",
+    "chat": "fixed:4"
+  },
+  "comparisons": {
+    "best_fixed_per_task_after_the_fact": {
+      "all": {
+        "n": 36,
+        "mean_diff": -0.0743,
+        "ci95": [
+          -0.2248,
+          0.0762
+        ],
+        "wins": 16,
+        "verdict": "no detectable difference vs"
+      },
+      "code": {
+        "n": 12,
+        "mean_diff": -0.0739,
+        "ci95": [
+          -0.4022,
+          0.2544
+        ],
+        "wins": 6,
+        "verdict": "no detectable difference vs"
+      },
+      "math": {
+        "n": 12,
+        "mean_diff": -0.0343,
+        "ci95": [
+          -0.3723,
+          0.3036
+        ],
+        "wins": 6,
+        "verdict": "no detectable difference vs"
+      },
+      "chat": {
+        "n": 12,
+        "mean_diff": -0.1147,
+        "ci95": [
+          -0.2898,
+          0.0604
+        ],
+        "wins": 4,
+        "verdict": "no detectable difference vs"
+      }
+    },
+    "adaedl": {
+      "all": {
+        "n": 36,
+        "mean_diff": 0.1986,
+        "ci95": [
+          0.066,
+          0.3311
+        ],
+        "wins": 27,
+        "verdict": "beats"
+      },
+      "code": {
+        "n": 12,
+        "mean_diff": 0.3134,
+        "ci95": [
+          0.0539,
+          0.5729
+        ],
+        "wins": 10,
+        "verdict": "beats"
+      },
+      "math": {
+        "n": 12,
+        "mean_diff": 0.0992,
+        "ci95": [
+          -0.2159,
+          0.4142
+        ],
+        "wins": 8,
+        "verdict": "no detectable difference vs"
+      },
+      "chat": {
+        "n": 12,
+        "mean_diff": 0.1831,
+        "ci95": [
+          0.041,
+          0.3251
+        ],
+        "wins": 9,
+        "verdict": "beats"
+      }
+    },
+    "formula_a_priori_fixed": {
+      "all": {
+        "n": 36,
+        "mean_diff": -0.0743,
+        "ci95": [
+          -0.2248,
+          0.0762
+        ],
+        "wins": 16,
+        "verdict": "no detectable difference vs"
+      },
+      "code": {
+        "n": 12,
+        "mean_diff": -0.0739,
+        "ci95": [
+          -0.4022,
+          0.2544
+        ],
+        "wins": 6,
+        "verdict": "no detectable difference vs"
+      },
+      "math": {
+        "n": 12,
+        "mean_diff": -0.0343,
+        "ci95": [
+          -0.3723,
+          0.3036
+        ],
+        "wins": 6,
+        "verdict": "no detectable difference vs"
+      },
+      "chat": {
+        "n": 12,
+        "mean_diff": -0.1147,
+        "ci95": [
+          -0.2898,
+          0.0604
+        ],
+        "wins": 4,
+        "verdict": "no detectable difference vs"
+      }
+    },
+    "oracle_best_fixed_per_cell": {
+      "all": {
+        "n": 36,
+        "mean_diff": -0.172,
+        "ci95": [
+          -0.314,
+          -0.03
+        ],
+        "wins": 10,
+        "verdict": "loses to"
+      },
+      "code": {
+        "n": 12,
+        "mean_diff": -0.164,
+        "ci95": [
+          -0.4901,
+          0.1621
+        ],
+        "wins": 4,
+        "verdict": "no detectable difference vs"
+      },
+      "math": {
+        "n": 12,
+        "mean_diff": -0.1271,
+        "ci95": [
+          -0.4294,
+          0.1751
+        ],
+        "wins": 4,
+        "verdict": "no detectable difference vs"
+      },
+      "chat": {
+        "n": 12,
+        "mean_diff": -0.2249,
+        "ci95": [
+          -0.3871,
+          -0.0627
+        ],
+        "wins": 2,
+        "verdict": "loses to"
+      }
+    }
+  },
+  "O2_graph_draft_holds": false,
+  "c_per_cell": {
+    "mean": 0.0897,
+    "sd": 0.0216
+  }
+}

@@ -194,7 +194,7 @@ def main():
     ap.add_argument("--repeats", type=int, default=3)
     ap.add_argument("--max-new", type=int, default=128)
     ap.add_argument("--c", type=float, default=None, help="cost ratio; measured if omitted")
-    ap.add_argument("--out", default="results/results.csv")
+    ap.add_argument("--out", default="results/phase3.csv")
     a = ap.parse_args()
     global MAX_DRAFT
     MAX_DRAFT = a.max_draft

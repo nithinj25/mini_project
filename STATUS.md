@@ -2,7 +2,7 @@
 
 Speculative decoding with Qwen2.5-0.5B-Instruct (draft) and Qwen2.5-3B-Instruct (target), batch size 1. See [SPEC.md](SPEC.md) for the plan.
 
-_Last updated: 2026-10-10 (P5)_
+_Last updated: 2026-10-10 (P6 complete)_
 
 | Phase | What | Status |
 | --- | --- | --- |
@@ -10,8 +10,9 @@ _Last updated: 2026-10-10 (P5)_
 | P2 | Speculative decoding verified on the real models | ✅ Done |
 | P3 | Fixed-γ sweep | ✅ Done |
 | P4 | AdaEDL baseline | ✅ Done |
-| P5 | Adaptive-γ comparison (the O2 claim) | ✅ Done: **O2 not supported** (ties the best fixed γ, beats AdaEDL) |
-| P6 | Plots and report | Not started |
+| P5 | Adaptive-γ comparison (the O2 claim), eager draft | ✅ Done: **O2 not supported** (ties the best fixed γ, beats AdaEDL) |
+| P5b | Same comparison with the CUDA-graph draft (SPEC §7's static-cache route) | ✅ Done: **O2 not supported** (ties the best fixed γ, beats AdaEDL); speed-ups 2.1–3.5× |
+| P6 | Plots and report | ✅ Done: [REPORT.md](REPORT.md), `results/figures/`, `results/results.csv` |
 
 ## Setup
 
@@ -25,8 +26,12 @@ _Last updated: 2026-10-10 (P5)_
 | `test_specdec.py` | 7 tests on tiny random models, running on the GPU by default (`--cpu` to force CPU) |
 | `bench.py` | Benchmark harness: CSV output, `--tiny` smoke mode, resumes by skipping finished cells |
 | `phase1.py`, `phase2.py` | Phase 1 and Phase 2 scripts |
-| `summarize.py` | Aggregates `results/results.csv` per (task, temperature, method) |
+| `summarize.py` | Aggregates `results/phase3.csv` per (task, temperature, method) |
 | `winperf.py` | Opts the process out of Windows power throttling (see below) |
+| `phase4.py`, `phase5.py`, `phase5b.py` | AdaEDL analysis; the O2 comparison with the eager draft and with the CUDA-graph draft (pre-registered) |
+| `make_results.py`, `plots.py` | Build `results/results.csv` (all phases) and `results/figures/` |
+| `REPORT.md` | The final report (Phase 6) |
+| `demo/`, `run_demo.bat` | Live presentation demo |
 | `prompts.py` | 6 prompts each for code, maths and chat |
 
 ### Windows power throttling
@@ -35,7 +40,7 @@ The first timings were 4–10× too slow. Windows 11 classed the Python process 
 
 ## Tests
 
-`ALL TESTS PASSED`: 11 tests, about 170 s on the GPU.
+`ALL TESTS PASSED`: 13 tests on the GPU; on the CPU the 11 non-graph tests pass and the 2 CUDA-graph tests skip (`results/tests_cpu.log`), about 170 s on the GPU.
 
 - **Lossless `verify`:** TV(output, p) = 0.0027 over 40k samples.
 - **Mutation check (SPEC §8):** replacing the residual with p raises that TV to 0.171, and the two-token joint test's TV from 0.023 to 0.119. Both tests catch the bug.
@@ -83,7 +88,7 @@ Files: `results/phase2.csv`, `results/phase2.json`, `results/phase2.log`. The ru
 
 ## Phase 3 results
 
-Files: `results/results.csv` (36 cells, 252 rows), `results/phase3_summary.csv`, `results/phase3.log`. The grid is γ ∈ {1, 2, 3, 4, 6, 8} × 3 tasks × 2 temperatures × 6 prompts, with a warm-up and 3 repeats per (cell, method), 128 new tokens. The run took two sessions (2026-09-30 and 2026-10-06), and bench.py resumed by skipping saved cells.
+Files: `results/phase3.csv` (36 cells, 252 rows; the P3 rows of `results/results.csv`), `results/phase3_summary.csv`, `results/phase3.log`. The grid is γ ∈ {1, 2, 3, 4, 6, 8} × 3 tasks × 2 temperatures × 6 prompts, with a warm-up and 3 repeats per (cell, method), 128 new tokens. The run took two sessions (2026-09-30 and 2026-10-06), and bench.py resumed by skipping saved cells.
 
 **Speed-up versus baseline** (mean ± std across 6 prompts; predicted S(α, γ, c) from the measured α in brackets):
 
@@ -219,16 +224,31 @@ Greedy output matches the baseline in 34–35 of 36 cells per method. The misses
 
 **When the claim could hold:** a cheaper draft would make the curve steeper and the best γ larger and more prompt-dependent, which is where online adaptation pays. A lower c could come from a compiled or static-cache draft, or from a larger target. See the open issues.
 
+## Phase 5b results and Phase 6
+
+Full write-up: **[REPORT.md](REPORT.md)**, sections 5.6–6.
+
+- **Compiled draft (SPEC §7), done natively on Windows.** `torch.compile` needs Triton, which is unavailable here, so `GraphDraft` captures the draft's decode step as a raw CUDA graph over a `StaticCache`. In fp64 it is bit-identical to the eager draft, and speculative decoding with it gives identical outputs and acceptance. The draft step falls from 53 ms to 7 ms, and c from 0.68 to 0.09–0.12.
+- **Phase 5b, pre-registered in `15f882b`.** Speed-ups are 2.1–3.5×.
+  - Adaptive vs the best fixed γ per task (picked after the fact: chat 4, code 8, maths 8): −0.074, CI [−0.225, +0.076], no detectable difference.
+  - Adaptive vs AdaEDL: +0.199, CI [+0.066, +0.331], beats it.
+  - **O2 is not supported in either cost regime.**
+- **Exploratory:** adaptive γ matches the best single fixed γ for the whole workload in both regimes (2.974× vs 2.979× in P5b), without a sweep.
+- **Phase 6 outputs:**
+  - `results/results.csv`: every row of P3, P5 and P5b, keyed by phase, task, prompt, temperature and method. Look one up with `python make_results.py --show P5b code 1 0.0 adaptive`.
+  - `results/figures/F1–F5`, made by `plots.py`.
+  - The demo's Results page now includes the O2 comparison.
+
 ## Open issues
 
-1. **Compiled or static-cache draft (SPEC §7, required because c > 0.5): not done.** `torch.compile` needs Triton, which is not installed and has no official Windows build. Options: the community `triton-windows` package, manual CUDA-graph capture of the draft's decode step with a static KV cache, or a Linux/WSL2 machine. This is the lever most likely to change the O2 result, because it lowers c.
-2. **Laptop timing noise.** Phase 5 controls drift by interleaving and pairing, but per-cell noise (~0.05–0.1 in speed-up) is still larger than the differences adaptive γ could exploit.
-3. **The fp32 recheck is impossible on 8 GB.** Phases 2–5 use the near-tie logit-gap analysis instead; the same two chat prompts account for every greedy mismatch.
+1. **Laptop timing noise** grows with the speed-up (paired sd ≈ 0.3–0.6 per cell at 3×), so few-percent effects cannot be resolved with 36 cells.
+2. **The fp32 recheck is impossible on 8 GB.** Every greedy mismatch is an fp16 tie with logit gap 0–0.031, analysed in the report.
+3. **The cap L = 8 binds** for code and maths at c ≈ 0.09.
 
-## Next steps
+## Next steps (optional)
 
-1. P6: plots (tokens/s vs γ per task, acceptance by draft position from the `pos_*` columns, predicted vs measured speed-up including adaptive and AdaEDL) and the report, with every number traced to `results/results.csv` (P3) or `results/phase5.csv` (P5).
-2. Optional: the compiled-draft arm (open issue 1), to test whether a lower c changes the O2 verdict.
+1. A 7B/14B target on a 24–40 GB GPU (c ≈ 0.1–0.2, no binding cap), where adaptive γ has the most room. This needs the 152,064 vs 151,936 output-row fix for larger Qwen models.
+2. Longer generations and a larger L on this pair.
 
 ## Presentation demo
 
@@ -251,6 +271,9 @@ python -m venv --system-site-packages .venv
 .venv\Scripts\python phase2.py
 .venv\Scripts\python bench.py            # Phase 3 sweep
 .venv\Scripts\python phase4.py           # Phase 4: AdaEDL
-.venv\Scripts\python phase5.py           # Phase 5: O2 comparison
+.venv\Scripts\python phase5.py           # Phase 5: O2 comparison (eager draft)
+.venv\Scripts\python phase5b.py          # Phase 5b: O2 comparison (CUDA-graph draft)
+.venv\Scripts\python make_results.py     # results/results.csv
+.venv\Scripts\python plots.py            # results/figures/
 .venv\Scripts\python summarize.py
 ```
