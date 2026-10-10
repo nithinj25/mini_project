@@ -15,6 +15,7 @@ from bench import DRAFT, TARGET, arch, encode_prompt, eos_ids, load_pair, pick_d
 from prompts import PROMPTS
 from winperf import disable_power_throttling
 from specdec import baseline_generate, best_gamma, mean_std, measure_cost_ratio, predicted_speedup
+from paths import R, RESULTS  # results dir, SPECDEC_RESULTS
 
 ALPHAS = [0.5, 0.6, 0.7, 0.8, 0.9]
 GAMMAS = range(1, 9)
@@ -26,7 +27,7 @@ def main():
     ap.add_argument("--dtype", default="fp16", choices=["fp16", "bf16", "fp32"])
     ap.add_argument("--repeats", type=int, default=3)
     a = ap.parse_args()
-    os.makedirs("results", exist_ok=True)
+    os.makedirs(RESULTS, exist_ok=True)
     disable_power_throttling()
     device = pick_device()
     out = {"gpu": torch.cuda.get_device_name(device), "capability": torch.cuda.get_device_capability(device),
@@ -69,7 +70,7 @@ def main():
                          "ttft_ms": round(ttft, 2), "ttft_ms_std": round(ttft_sd, 2)})
             print(f"baseline {task:4s} p{pid}: {tps:6.2f} ± {tps_sd:.2f} tok/s   TTFT {ttft:6.1f} ± {ttft_sd:.1f} ms"
                   f"   ({runs[0].new_tokens} tokens)")
-    with open("results/phase1_baseline.csv", "w", newline="") as f:
+    with open(R("phase1_baseline.csv"), "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0]))
         w.writeheader()
         w.writerows(rows)
@@ -79,7 +80,7 @@ def main():
     out["peak_mem_gb"] = torch.cuda.max_memory_allocated(device) / 2**30
 
     # 6. predictions, written before any speculative run
-    with open("results/phase1_predictions.csv", "w", newline="") as f:
+    with open(R("phase1_predictions.csv"), "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["alpha"] + [f"S_gamma{g}" for g in GAMMAS] + ["best_gamma", "best_S"])
         print(f"\npredicted S(alpha, gamma, c={c_mean:.4f})")
@@ -92,7 +93,7 @@ def main():
             w.writerow([al] + [round(x, 4) for x in s] + [bg, round(max(s), 4)])
             print(f"{al:4.1f}  " + " ".join(f"{x:6.3f}" for x in s) + f"   {bg}")
 
-    with open("results/phase1.json", "w") as f:
+    with open(R("phase1.json"), "w") as f:
         json.dump(out, f, indent=2)
     print(f"\nc = {c_mean:.4f} ± {c_sd:.4f} | baseline {out['baseline_tokens_per_s_mean']:.2f} ± "
           f"{out['baseline_tokens_per_s_std']:.2f} tok/s | best gamma @ alpha=0.7: {out['predicted_best_gamma']['0.7']}"

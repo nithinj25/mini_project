@@ -11,15 +11,20 @@ A row's key is (phase, task, prompt_id, temperature, method). Look one up with:
 """
 import argparse
 import csv
+import os
+from paths import R  # results dir, SPECDEC_RESULTS
 
-SOURCES = [("P3", "results/phase3.csv"), ("P5", "results/phase5.csv"), ("P5b", "results/phase5b.csv")]
-OUT = "results/results.csv"
+SOURCES = [("P3", R("phase3.csv")), ("P5", R("phase5.csv")), ("P5b", R("phase5b.csv"))]
+OUT = R("results.csv")
 KEY = ["phase", "task", "prompt_id", "temperature", "method"]
 
 
 def build():
     rows, fields = [], list(KEY) + ["draft"]
     for phase, path in SOURCES:
+        if not os.path.exists(path):
+            print(f"  {phase}: {path} not found, skipped")
+            continue
         for r in csv.DictReader(open(path, encoding="utf-8")):
             r["phase"] = phase
             r["draft"] = "cuda-graph static cache" if phase == "P5b" else "eager"
@@ -35,6 +40,8 @@ def build():
     print(f"{OUT}: {len(rows)} rows")
     for phase, _ in SOURCES:
         pr = [r for r in rows if r["phase"] == phase]
+        if not pr:
+            continue
         cells = {(r["task"], r["temperature"], r["method"]) for r in pr}
         print(f"  {phase}: {len(pr)} rows, {len(cells)} (task × temperature × method) cells, "
               f"methods {sorted({r['method'] for r in pr})}")

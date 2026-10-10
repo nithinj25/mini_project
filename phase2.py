@@ -22,6 +22,7 @@ from bench import DRAFT, TARGET, encode_prompt, eos_ids, load_pair, pick_device
 from prompts import PROMPTS
 from specdec import FixedGamma, baseline_generate, speculative_generate
 from winperf import disable_power_throttling
+from paths import R  # results dir, SPECDEC_RESULTS
 
 NEAR_TIE = 0.25  # logits; FP16 accumulated error over 36 layers is of this order
 
@@ -83,7 +84,7 @@ def main():
             if pid == 0:
                 print(f"  sample [{task}]: {tok.decode(ref, skip_special_tokens=True)[:160]!r}", flush=True)
 
-    with open("results/phase2.csv", "w", newline="", encoding="utf-8") as f:
+    with open(R("phase2.csv"), "w", newline="", encoding="utf-8") as f:
         wr = csv.DictWriter(f, fieldnames=list(rows[0]))
         wr.writeheader()
         wr.writerows(rows)
@@ -99,7 +100,7 @@ def main():
             summary["mismatches"].append({k: r[k] for k in ("task", "prompt_id", "gamma", "first_div", "gap",
                                                             "ref_rank", "spec_rank")} | {"near_tie": numerics})
     summary["unexplained"] = sum(not m["near_tie"] for m in summary["mismatches"])
-    with open("results/phase2.json", "w") as f:
+    with open(R("phase2.json"), "w") as f:
         json.dump(summary, f, indent=2)
     print(f"\n{summary['matches']}/{summary['runs']} greedy runs match baseline; "
           f"{len(summary['mismatches'])} mismatches, {summary['unexplained']} not explained as near-ties")

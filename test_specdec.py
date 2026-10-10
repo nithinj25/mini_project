@@ -189,17 +189,26 @@ def test_on_round_hook():
             from_draft += n_draft
             time.sleep(0.01)
 
+        def excluded(st, wall):
+            # timed + hook time must add up to the wall clock; were the hook counted inside st.seconds,
+            # its whole duration would be counted twice. Independent of how fast the machine is.
+            return abs(wall - (st.seconds + st.callback_s)) < 0.25 * st.callback_s
+
+        t0 = time.perf_counter()
         out, st = speculative_generate(target, draft, PROMPT, 40, FixedGamma(3), temperature=temp, seed=5,
                                        on_round=hook)
+        wall = time.perf_counter() - t0
         assert out == ref == seen, temp
         # no EOS and γ is capped to the remaining budget, so no round is truncated
         assert from_draft == st.accepted and st.callback_s >= 0.01 * st.rounds
+        assert excluded(st, wall), (wall, st.seconds, st.callback_s)
         base, _ = baseline_generate(target, PROMPT, 40, temperature=temp, seed=5)
         seen, from_draft = [], 0
+        t0 = time.perf_counter()
         out, st = baseline_generate(target, PROMPT, 40, temperature=temp, seed=5, on_round=hook)
+        wall = time.perf_counter() - t0
         assert out == base == seen and from_draft == 0
-        # 40 hook calls x 10 ms would dominate if they were timed
-        assert st.seconds < st.callback_s, (st.seconds, st.callback_s)
+        assert st.callback_s >= 0.01 * len(out) and excluded(st, wall), (wall, st.seconds, st.callback_s)
 
 
 def test_adaedl_stopping_rule():

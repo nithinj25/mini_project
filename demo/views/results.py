@@ -9,10 +9,30 @@ import streamlit as st
 from common import RESULTS, TASK_COLORS, TASK_NAMES
 
 
+def result_dirs():
+    """results/ (this laptop) plus any results/<GPU>/ folder from another machine, e.g. unzipped from Kaggle."""
+    dirs = [RESULTS] + sorted(os.path.join(RESULTS, d) for d in os.listdir(RESULTS)
+                              if os.path.isdir(os.path.join(RESULTS, d)) and d not in ("figures", "logs"))
+    return [d for d in dirs if any(f.startswith("phase") for f in os.listdir(d))]
+
+
+def results_dir():
+    return st.session_state.get("results_dir", RESULTS)
+
+
+def label_dir(d):
+    if d == RESULTS:
+        return "This laptop (results/)"
+    return f"{os.path.basename(d)} (results/{os.path.basename(d)}/)"
+
+
 @st.cache_data
-def load_results():
-    summ = pd.read_csv(os.path.join(RESULTS, "phase3_summary.csv"))
-    rows = pd.read_csv(os.path.join(RESULTS, "phase3.csv"))
+def load_results(d):
+    path_s, path_r = os.path.join(d, "phase3_summary.csv"), os.path.join(d, "phase3.csv")
+    if not (os.path.exists(path_s) and os.path.exists(path_r)):
+        return None, None
+    summ = pd.read_csv(path_s)
+    rows = pd.read_csv(path_r)
     return summ, rows
 
 
@@ -26,9 +46,16 @@ def styled(fig, title, ytitle, xtitle):
 
 def page_results():
     st.title("Results")
-    st.markdown("RTX 4060 Laptop GPU · fp16 · batch size 1 · 128 new tokens · 6 prompts per task · "
-                "warm-up + 3 repeats per measurement. Every number comes from `results/phase3.csv` (phase P3 of `results/results.csv`).")
-    summ, rows = load_results()
+    dirs = result_dirs()
+    if len(dirs) > 1:
+        st.selectbox("Results from", dirs, format_func=label_dir, key="results_dir")
+    summ, rows = load_results(results_dir())
+    if summ is None:
+        st.info("This results folder has no Phase 3 sweep (e.g. a QUICK Kaggle run); the comparisons below still show.")
+        return
+    src = os.path.relpath(results_dir(), os.path.dirname(RESULTS)).replace(os.sep, "/")
+    st.markdown(f"{rows['gpu'].iloc[0]} · {rows['dtype'].iloc[0]} · batch size 1 · 128 new tokens · 6 prompts per task · "
+                f"warm-up + 3 repeats per measurement. Every number comes from `{src}/phase3.csv`.")
     fixed = summ[summ["method"].str.startswith("fixed")].copy()
     fixed["gamma"] = fixed["gamma"].astype(int)
 
@@ -124,7 +151,7 @@ METHOD_NAMES = {"adaptive": "Adaptive γ (ours)", "adaedl:0.7": "AdaEDL"}
 
 
 def load_json(name):
-    path = os.path.join(RESULTS, name)
+    path = os.path.join(results_dir(), name)
     return json.load(open(path, encoding="utf-8")) if os.path.exists(path) else None
 
 
@@ -175,7 +202,8 @@ def page_comparison():
         st.plotly_chart(method_chart(p5b, temp, f"Speed-up by method, T = {temp:g}",
                                      ["fixed:2", "fixed:4", "fixed:6", "fixed:8"]), use_container_width=True)
         st.caption("Capturing the draft's decode step as one CUDA graph removes the kernel-launch overhead: "
-                   "the 0.5B now costs ~12% of a 3B step, speed-ups reach 2–5×, and the best γ differs by task.")
+                   f"the 0.5B now costs ~{p5b['c_per_cell']['mean']:.0%} of a 3B step, speed-ups reach 2–5×, "
+                   "and the best γ differs by task.")
 
 
 page_results()

@@ -34,11 +34,12 @@ from bench import DRAFT, TARGET, encode_prompt, eos_ids, load_pair, pick_device
 from prompts import PROMPTS
 from specdec import GraphDraft, mean_std
 from winperf import disable_power_throttling
+from paths import R  # results dir, SPECDEC_RESULTS
 
 METHODS = ["baseline", "fixed:2", "fixed:4", "fixed:6", "fixed:8", "adaptive", "adaedl:0.7"]
 FIXED = [m for m in METHODS if m.startswith("fixed:")]
 A_PRIORI = {"chat": "fixed:4", "code": "fixed:8", "math": "fixed:8"}
-OUT = "results/phase5b.csv"
+OUT = R("phase5b.csv")
 
 
 def analyse():
@@ -83,7 +84,7 @@ def analyse():
     out["table"] = table
     out["c_per_cell"] = dict(zip(("mean", "sd"), (round(x, 4) for x in mean_std(
         float(r["c"]) for r in rows if r["method"] == "baseline"))))
-    with open("results/phase5b_summary.json", "w") as f:
+    with open(R("phase5b_summary.json"), "w") as f:
         json.dump(out, f, indent=2)
     print(json.dumps({k: v for k, v in out.items() if k != "table"}, indent=2))
 

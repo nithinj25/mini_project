@@ -23,6 +23,7 @@ from bench import DRAFT, TARGET, encode_prompt, eos_ids, load_pair, pick_device
 from prompts import PROMPTS
 from specdec import AdaEDL, FixedGamma, baseline_generate, mean_std, speculative_generate
 from winperf import disable_power_throttling
+from paths import R  # results dir, SPECDEC_RESULTS
 
 TASKS = ("code", "math", "chat")
 BINS = [0, 0.25, 0.5, 1.0, 2.0, 4.0, 99]
@@ -106,7 +107,7 @@ def main():
                       f"H̄ {r['mean_entropy']:.2f}  α {r['alpha']:.3f}  λ→{r['final_lam']:.3f}  "
                       f"x{r['speedup_indicative']:.2f}  match={r['matches_baseline']}", flush=True)
 
-    for name, rows in (("results/phase4_runs.csv", runs), ("results/phase4_steps.csv", steps)):
+    for name, rows in ((R("phase4_runs.csv"), runs), (R("phase4_steps.csv"), steps)):
         with open(name, "w", newline="", encoding="utf-8") as f:
             wr = csv.DictWriter(f, fieldnames=list(rows[0]))
             wr.writeheader()
@@ -171,7 +172,7 @@ def main():
             "alpha": round(mean_std(r["alpha"] for r in rs)[0], 4),
             "speedup_indicative": round(mean_std(r["speedup_indicative"] for r in rs)[0], 3)}
 
-    with open("results/phase4.json", "w") as f:
+    with open(R("phase4.json"), "w") as f:
         json.dump(summary, f, indent=2)
     print("\n" + json.dumps(summary, indent=2))
 

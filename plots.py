@@ -18,8 +18,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
 from specdec import mean_std  # noqa: E402
+from paths import R  # results dir, SPECDEC_RESULTS
 
-OUT = "results/figures"
+OUT = R("figures")
 TASKS = ["code", "math", "chat"]
 NAMES = {"code": "Code", "math": "Maths", "chat": "Chat"}
 COLOR = {"code": "#2a78d6", "math": "#eb6834", "chat": "#1baf7a"}  # validated categorical slots 1-3
@@ -257,14 +258,24 @@ def fig_adaedl(p4_summary, p4_runs):
 
 
 def main():
-    p3, p5, p5b = load("results/phase3.csv"), load("results/phase5.csv"), load("results/phase5b.csv")
-    fig_speedup_vs_gamma(p3, p5b)
-    fig_acceptance_by_position(p3)
-    fig_predicted_vs_measured(p3, p5, p5b)
-    fig_o2(p5, p5b, json.load(open("results/phase5_summary.json", encoding="utf-8")),
-           json.load(open("results/phase5b_summary.json", encoding="utf-8")))
-    fig_adaedl(json.load(open("results/phase4.json", encoding="utf-8")), load("results/phase4_runs.csv"))
+    """Draw every figure whose inputs exist (a partial run, e.g. on Kaggle, gets the figures it can)."""
+    def have(*names):
+        missing = [n for n in names if not os.path.exists(R(n))]
+        if missing:
+            print("skipped (missing " + ", ".join(missing) + ")")
+        return not missing
 
+    if have("phase3.csv", "phase5b.csv"):
+        fig_speedup_vs_gamma(load(R("phase3.csv")), load(R("phase5b.csv")))
+    if have("phase3.csv"):
+        fig_acceptance_by_position(load(R("phase3.csv")))
+    if have("phase3.csv", "phase5.csv", "phase5b.csv"):
+        fig_predicted_vs_measured(load(R("phase3.csv")), load(R("phase5.csv")), load(R("phase5b.csv")))
+    if have("phase5.csv", "phase5b.csv", "phase5_summary.json", "phase5b_summary.json"):
+        fig_o2(load(R("phase5.csv")), load(R("phase5b.csv")), json.load(open(R("phase5_summary.json"), encoding="utf-8")),
+               json.load(open(R("phase5b_summary.json"), encoding="utf-8")))
+    if have("phase4.json", "phase4_runs.csv"):
+        fig_adaedl(json.load(open(R("phase4.json"), encoding="utf-8")), load(R("phase4_runs.csv")))
 
 if __name__ == "__main__":
     main()

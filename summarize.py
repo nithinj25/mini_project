@@ -10,6 +10,7 @@ import csv
 from collections import defaultdict
 
 from specdec import mean_std, predicted_speedup
+from paths import R  # results dir, SPECDEC_RESULTS
 
 
 def gamma_of(method: str):
@@ -18,8 +19,8 @@ def gamma_of(method: str):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--csv", default="results/phase3.csv")
-    ap.add_argument("--out", default="results/phase3_summary.csv")
+    ap.add_argument("--csv", default=R("phase3.csv"))
+    ap.add_argument("--out", default=R("phase3_summary.csv"))
     a = ap.parse_args()
     rows = list(csv.DictReader(open(a.csv, encoding="utf-8")))
 

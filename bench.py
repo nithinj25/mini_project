@@ -15,6 +15,7 @@ import torch
 
 from prompts import PROMPTS
 from winperf import disable_power_throttling
+from paths import R  # results dir, SPECDEC_RESULTS
 from specdec import (AdaEDL, FixedGamma, GammaController, assert_compatible, baseline_generate,
                      mean_std, measure_cost_ratio, predicted_speedup, speculative_generate)
 
@@ -194,7 +195,7 @@ def main():
     ap.add_argument("--repeats", type=int, default=3)
     ap.add_argument("--max-new", type=int, default=128)
     ap.add_argument("--c", type=float, default=None, help="cost ratio; measured if omitted")
-    ap.add_argument("--out", default="results/phase3.csv")
+    ap.add_argument("--out", default=R("phase3.csv"))
     a = ap.parse_args()
     global MAX_DRAFT
     MAX_DRAFT = a.max_draft
@@ -209,7 +210,7 @@ def main():
         target, draft = tiny_pair(device)
         g = torch.Generator().manual_seed(0)
         cells = [("tiny", 0, torch.randint(0, 1000, (32,), generator=g).tolist())]
-        eos, a.out, a.repeats, a.max_new, dtype = None, "results/tiny.csv", 2, 48, "fp32"
+        eos, a.out, a.repeats, a.max_new, dtype = None, R("tiny.csv"), 2, 48, "fp32"
         methods, temps = ["fixed:4", "adaptive", "adaedl"], [0.0]
     else:
         tok, target, draft = load_pair(a.target, a.draft, a.dtype, device)

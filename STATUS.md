@@ -250,6 +250,14 @@ Full write-up: **[REPORT.md](REPORT.md)**, sections 5.6–6.
 1. A 7B/14B target on a 24–40 GB GPU (c ≈ 0.1–0.2, no binding cap), where adaptive γ has the most room. This needs the 152,064 vs 151,936 output-row fix for larger Qwen models.
 2. Longer generations and a larger L on this pair.
 
+## Run on Kaggle (free T4) or any other GPU machine
+
+- **Notebook:** `kaggle/specdec_kaggle.ipynb`. Upload it to Kaggle, set **Accelerator → GPU T4** and **Internet → On**, pick `PLAN = "QUICK" | "CORE" | "FULL"` (~1.5–2 h, ~3–3.5 h, ~6 h), then use **Save Version → Save & Run All**.
+- **Outputs:** results go to `results/<GPU>/` (e.g. `results/T4/`), never mixed with the laptop's `results/`, and are zipped to `/kaggle/working/specdec_results_<GPU>.zip`.
+- **Without the notebook:** `SPECDEC_RESULTS=results/T4 python run_all.py --steps tests,p1,p5b` on any Linux or Windows GPU machine. `python run_all.py --list` shows every step with rough times.
+- **Resuming:** steps record completion in `<results>/logs/done.txt`, and p3/p5/p5b resume cell by cell, so an interrupted session just re-runs.
+- **Constraint:** the 3B + 0.5B pair fits one 16 GB T4. A 7B target does not fit, and with 2× T4 only one card is used.
+
 ## Presentation demo
 
 `run_demo.bat` (or `.venv\Scripts\python -m streamlit run demo\app.py`) opens a local app at http://localhost:8501:

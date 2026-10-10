@@ -36,12 +36,13 @@ from prompts import PROMPTS
 from specdec import (baseline_generate, mean_std, measure_cost_ratio, predicted_speedup,
                      speculative_generate)
 from winperf import disable_power_throttling
+from paths import R  # results dir, SPECDEC_RESULTS
 
 TASKS = ("code", "math", "chat")
 TEMPS = (0.0, 0.7)
 METHODS = ["baseline", "fixed:1", "fixed:2", "adaptive", "adaedl:0.7"]
 BEST_FIXED = {"code": "fixed:1", "math": "fixed:2", "chat": "fixed:1"}  # a priori, from Phase 3
-REPEATS, MAX_NEW, OUT = 3, 128, "results/phase5.csv"
+REPEATS, MAX_NEW, OUT = 3, 128, R("phase5.csv")
 P5_FIELDS = FIELDS + ["speedup_sd_repeats", "mean_gamma", "order_positions", "phase"]
 T_CRIT = {5: 2.571, 11: 2.201, 35: 2.030}  # two-sided 95% t quantiles for the n - 1 used below
 
@@ -154,7 +155,7 @@ def analyse():
     out["table"] = table
     out["c_per_cell"] = dict(zip(("mean", "sd"), (round(x, 4) for x in mean_std(
         float(r["c"]) for r in rows if r["method"] == "baseline"))))
-    with open("results/phase5_summary.json", "w") as f:
+    with open(R("phase5_summary.json"), "w") as f:
         json.dump(out, f, indent=2)
     print(json.dumps({k: v for k, v in out.items() if k != "table"}, indent=2))
     return out
