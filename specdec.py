@@ -14,7 +14,7 @@ import time
 from dataclasses import dataclass, field
 
 import torch
-from transformers import DynamicCache
+from transformers import DynamicCache, StaticCache
 
 
 # --------------------------------------------------------------------------- distributions
@@ -210,6 +210,9 @@ def speculative_generate(target, draft, prompt_ids: list[int], max_new_tokens: i
     gen = make_generator(device, seed)
     eos, limit = _eos_set(eos_token_id), len(prompt_ids) + max_new_tokens
     seq, t_cache, d_cache, stats = list(prompt_ids), DynamicCache(), DynamicCache(), Stats()
+    runner = draft if isinstance(draft, GraphDraft) else None  # static cache + CUDA graph for the draft
+    if runner is not None:
+        runner.reset()
     controller.reset()
 
     _sync(device)
@@ -222,7 +225,7 @@ def speculative_generate(target, draft, prompt_ids: list[int], max_new_tokens: i
         # 1. draft: γ autoregressive guesses, keeping the full distribution each time
         drafts, qs = [], []
         for i in range(gamma_max):
-            logits = _forward(draft, d_cache, seq + drafts, 1)[-1]
+            logits = runner.forward_last(seq + drafts) if runner else _forward(draft, d_cache, seq + drafts, 1)[-1]
             q = to_probs(logits, temperature)
             stats.draft_passes += 1
             if controller.stop_before(q, i, logits):
@@ -244,7 +247,10 @@ def speculative_generate(target, draft, prompt_ids: list[int], max_new_tokens: i
         before = len(seq)
         done = _commit(seq, drafts[:n_acc] + [extra], eos, limit)
         rollback(t_cache, len(seq) - 1)
-        rollback(d_cache, len(seq) - 1)
+        if runner is not None:
+            runner.rollback(len(seq) - 1)
+        else:
+            rollback(d_cache, len(seq) - 1)
         if stats.rounds == 1:
             _sync(device)
             stats.ttft_s = time.perf_counter() - t0
@@ -322,6 +328,111 @@ class GammaController(FixedGamma):
     def update(self, accepted: int, tested: int, gamma: int) -> None:
         self.kept = self.decay * self.kept + accepted
         self.seen = self.decay * self.seen + tested
+
+
+class GraphDraft:
+    """The draft model behind a static KV cache, with its single-token decode step captured as a CUDA graph.
+
+    At batch size 1 a decode step is dominated by CPU-side kernel launches (~16 µs each on Windows), so a
+    small draft costs almost as much as the target (c ≈ 0.7). Replaying one captured graph removes that
+    overhead: this is SPEC §7's "static-cache route for the draft" (torch.compile needs Triton, which is
+    unavailable on Windows; raw CUDA graphs are not).
+
+    Same contract as the eager draft: the cache holds a prefix of the committed sequence and
+    forward_last(seq) feeds it seq[length:]. Rollback moves the write position back; entries beyond it are
+    stale but masked out by cache_position, and get overwritten. Long feeds (the prompt) run eagerly;
+    short ones (1-2 tokens per round) are graph replays, one token each.
+    """
+
+    def __init__(self, model, max_len: int = 1024, eager_threshold: int = 4):
+        self.model, self.max_len, self.eager_threshold = model, max_len, eager_threshold
+        self.device, self.config = model.device, model.config
+        self.cache = StaticCache(config=model.config, max_cache_len=max_len)
+        self.ids = torch.zeros((1, 1), dtype=torch.long, device=self.device)
+        self.pos = torch.zeros((1,), dtype=torch.long, device=self.device)
+        self.graph, self.out = None, None
+        self.length = 0     # tokens of the committed prefix the cache holds
+        self.dev_len = 0    # where the cache's own write counters currently point
+
+    def reset(self) -> None:
+        self.length = 0
+
+    def rollback(self, length: int) -> None:
+        self.length = min(self.length, length)
+
+    def _sync_counters(self) -> None:
+        if self.dev_len != self.length:
+            for layer in self.cache.layers:
+                layer.cumulative_length.fill_(self.length)
+            self.dev_len = self.length
+
+    def _eager(self, tokens: list[int]) -> torch.Tensor:
+        cp = torch.arange(self.length, self.length + len(tokens), device=self.device)
+        out = self.model(input_ids=torch.tensor([tokens], device=self.device), cache_position=cp,
+                         position_ids=cp[None], past_key_values=self.cache, use_cache=True, logits_to_keep=1)
+        self.length += len(tokens)
+        self.dev_len = self.length
+        return out.logits[0, -1]
+
+    def _capture(self) -> None:
+        """Record one decode step at the current position (the buffers must already exist)."""
+        side = torch.cuda.Stream(self.device)
+        side.wait_stream(torch.cuda.current_stream(self.device))
+        with torch.cuda.stream(side):  # warm-up runs write garbage at `length`; counters are reset after
+            for _ in range(2):
+                self._sync_counters()
+                self.model(input_ids=self.ids, cache_position=self.pos, position_ids=self.pos[None],
+                           past_key_values=self.cache, use_cache=True, logits_to_keep=1)
+                self.dev_len = -1
+        torch.cuda.current_stream(self.device).wait_stream(side)
+        self._sync_counters()
+        self.graph = torch.cuda.CUDAGraph()
+        with torch.cuda.graph(self.graph):
+            self.out = self.model(input_ids=self.ids, cache_position=self.pos, position_ids=self.pos[None],
+                                  past_key_values=self.cache, use_cache=True, logits_to_keep=1).logits
+
+    def _replay(self, token: int) -> torch.Tensor:
+        self._sync_counters()
+        self.ids.fill_(token)
+        self.pos.fill_(self.length)
+        if self.graph is None:
+            self._capture()
+        self.graph.replay()
+        self.length += 1
+        self.dev_len = self.length  # the graph advanced the counters by one
+        return self.out[0, -1]
+
+    @torch.inference_mode()
+    def forward_last(self, seq: list[int]) -> torch.Tensor:
+        """Feed the part of `seq` the cache has not seen; return the logits after its last token."""
+        new = seq[self.length:]
+        if not new:
+            raise ValueError("forward_last needs at least one unseen token")
+        if len(seq) > self.max_len:
+            raise ValueError(f"sequence of {len(seq)} tokens exceeds the static cache ({self.max_len})")
+        self._sync_counters()
+        if len(new) > self.eager_threshold or not self.cache.layers[0].is_initialized:
+            return self._eager(new)
+        for tok in new:
+            logits = self._replay(tok)
+        return logits
+
+    @torch.inference_mode()
+    def time_decode_step(self, context_len: int = 256, steps: int = 20, warmup: int = 3, seed: int = 0) -> float:
+        """Mean seconds per single-token decode step on top of a `context_len` cache (graph replays)."""
+        g = torch.Generator().manual_seed(seed)
+        ctx = torch.randint(0, self.config.vocab_size, (context_len + warmup + steps,), generator=g).tolist()
+        self.reset()
+        self.forward_last(ctx[:context_len])
+        for i in range(warmup):
+            self.forward_last(ctx[:context_len + i + 1])
+        _sync(self.device)
+        t0 = time.perf_counter()
+        for i in range(steps):
+            self.forward_last(ctx[:context_len + warmup + i + 1])
+        _sync(self.device)
+        self.reset()
+        return (time.perf_counter() - t0) / steps
 
 
 class AdaEDL(FixedGamma):
@@ -429,7 +540,10 @@ def measure_cost_ratio(target, draft, device, context_len: int = 256, steps: int
                        warmup: int = 3) -> dict:
     """c = draft step time / target step time."""
     t_target = time_decode_step(target, device, context_len, steps, warmup)
-    t_draft = time_decode_step(draft, device, context_len, steps, warmup)
+    if isinstance(draft, GraphDraft):
+        t_draft = draft.time_decode_step(context_len, steps, warmup)
+    else:
+        t_draft = time_decode_step(draft, device, context_len, steps, warmup)
     return {"c": t_draft / t_target, "target_step_ms": 1e3 * t_target, "draft_step_ms": 1e3 * t_draft}
 
 

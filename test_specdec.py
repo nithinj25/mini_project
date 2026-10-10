@@ -10,7 +10,7 @@ import time
 import torch
 from transformers import DynamicCache, Qwen2Config, Qwen2ForCausalLM
 
-from specdec import (AdaEDL, FixedGamma, GammaController, assert_compatible, baseline_generate, best_gamma,
+from specdec import (AdaEDL, FixedGamma, GammaController, GraphDraft, _forward, assert_compatible, baseline_generate, best_gamma,
                      expected_tokens, predicted_speedup, rollback, speculative_generate, to_probs,
                      verify)
 from winperf import disable_power_throttling
@@ -270,6 +270,47 @@ def test_adaedl_lossless_and_adaptive():
     d = tv(counts / N, exact)
     print(f"  sampling: TV(joint, exact) = {d:.4f}, draft lengths used {sorted(set(lengths))}")
     assert d < 0.06 and len(set(lengths) - {0}) >= 3, (d, set(lengths))
+
+
+def test_graph_draft_matches_eager():
+    """GraphDraft (static cache + CUDA graph) gives the eager draft's logits through prefill, replays and rollbacks."""
+    if DEVICE.type != "cuda":
+        print("  skipped: CUDA graphs need a GPU")
+        return
+    draft = noisy_copy(tiny_model(0), 0.02, seed=7)
+    gd, cache = GraphDraft(draft, max_len=256), DynamicCache()
+    g = torch.Generator().manual_seed(3)
+    seq = PROMPT + torch.randint(0, VOCAB, (120,), generator=g).tolist()
+    n, worst, steps = len(PROMPT), 0.0, 0
+    while n < len(seq):
+        k = min(len(seq), n + int(torch.randint(1, 4, (1,), generator=g)))  # feed 1-3 new tokens
+        a, b = gd.forward_last(seq[:k]), _forward(draft, cache, seq[:k], 1)[-1]
+        worst = max(worst, float((a.double() - b.double()).abs().max()))
+        steps += 1
+        back = int(torch.randint(0, 3, (1,), generator=g))                   # then roll back 0-2 tokens
+        n = k - back
+        gd.rollback(n)
+        rollback(cache, n)
+    print(f"  {steps} feeds with rollbacks, max |logit diff| = {worst:.2e}")
+    assert gd.graph is not None and worst < 1e-9, worst
+
+
+def test_graph_draft_speculative_equivalence():
+    """Speculative decoding with GraphDraft makes exactly the same proposals and outputs as with the eager draft."""
+    if DEVICE.type != "cuda":
+        print("  skipped: CUDA graphs need a GPU")
+        return
+    target = tiny_model(0)
+    draft = noisy_copy(target, 0.02, seed=7)
+    gd = GraphDraft(draft, max_len=256)
+    ref, _ = baseline_generate(target, PROMPT, 60)
+    for temp in (0.0, 1.0):
+        for ctl in (lambda: FixedGamma(3), lambda: AdaEDL(max_draft=6, lam0=0.4, temperature=temp)):
+            out_e, st_e = speculative_generate(target, draft, PROMPT, 60, ctl(), temperature=temp, seed=11)
+            out_g, st_g = speculative_generate(target, gd, PROMPT, 60, ctl(), temperature=temp, seed=11)
+            assert out_g == out_e and st_g.gammas == st_e.gammas and st_g.accepted == st_e.accepted, temp
+            if temp == 0.0:
+                assert out_g == ref
 
 
 if __name__ == "__main__":
