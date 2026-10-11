@@ -264,7 +264,10 @@ Full write-up: **[REPORT.md](REPORT.md)**, sections 5.6–6.
 
 1. **Base model:** the 3B model alone, streamed live with tokens/s.
 2. **Speculative decoding:** the same prompt streamed live. Guesses from the 0.5B model that the 3B accepted are highlighted green, and rejected guesses can be shown struck through. The page compares speed and output with page 1.
-3. **Results:** the Phase 3 charts (speed-up vs γ, acceptance by draft position, predicted vs measured) and the data table, read from `results/`.
+   - **Fast draft (CUDA graph)** is on by default. The default γ is the best one measured for each task: 8 for code and maths, 4 for chat (Phase 5b). Switching it off gives the ordinary draft with γ = 1/2/1 (Phase 3).
+   - **Fixed γ or Adaptive γ (our method):** the page shows the mean γ actually used.
+   - **Example run** (maths, greedy): fast draft with γ = 8 gave 3.9×, adaptive 3.6× (mean γ 6.9), the ordinary draft with γ = 2 gave 1.4×, all with output identical to the base model.
+3. **Results:** the Phase 3 charts, plus the O2 comparison for both drafts (Phases 5 and 5b), read from `results/`. A **"Results from"** selector switches to `results/<GPU>/` folders from other machines, such as Kaggle.
 
 Display time is excluded from all timings by the `on_round` hook in `specdec.py` (covered by `test_on_round_hook`).
 

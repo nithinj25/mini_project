@@ -1,7 +1,7 @@
 """Page 2: speculative decoding, streamed live with accepted guesses highlighted."""
 import streamlit as st
 
-from common import BEST_GAMMA, LiveView, load_models, metric_row, models_or_stop, run_key
+from common import BEST_GAMMA_EAGER, BEST_GAMMA_FAST, LiveView, load_models, metric_row, models_or_stop, run_key
 from prompts import PROMPTS
 
 
@@ -21,9 +21,23 @@ def page_spec():
 **Lossless:** the rejection rule makes the output follow exactly the 3B model's distribution
 (Leviathan et al. 2023; Chen et al. 2023). In greedy mode the text is identical to the base model's.
 """)
-    default_g = BEST_GAMMA[p["task"]] if p["text"] in PROMPTS[p["task"]] else 2
-    g = st.slider("γ: tokens the draft guesses per round", 1, 8, default_g, key=f"gamma_{p['task']}",
-                  help="Default = best fixed γ for this task in our Phase 3 sweep")
+    left, right = st.columns(2)
+    fast = left.toggle("Fast draft (CUDA graph)", value=True, key="fast_draft",
+                       help="The 0.5B's decode step is captured as one CUDA graph over a static KV cache: it then "
+                            "costs ~10% of a 3B step instead of ~70%. Off = the ordinary (eager) draft.")
+    mode = right.radio("Draft length γ", ["Fixed γ", "Adaptive γ (our method)"], horizontal=True, key="gamma_mode",
+                       help="Adaptive picks γ every round from the measured cost ratio c and the running acceptance rate.")
+    best = BEST_GAMMA_FAST if fast else BEST_GAMMA_EAGER
+    if mode == "Fixed γ":
+        default_g = best[p["task"]] if p["text"] in PROMPTS[p["task"]] else (4 if fast else 2)
+        g = st.slider("γ: tokens the draft guesses per round", 1, 8, default_g,
+                      key=f"gamma_{p['task']}_{'fast' if fast else 'eager'}",
+                      help=f"Default = the fastest fixed γ for this task in our {'Phase 5b' if fast else 'Phase 3'} "
+                           "measurements (" + ", ".join(f"{k} {v}" for k, v in best.items()) + ")")
+    else:
+        g = "adaptive"
+        st.caption("Adaptive γ starts from a prior and adjusts every round, between 1 and 8.")
+    config = (fast, g)
     show_rej = st.toggle("Show rejected guesses", value=False)
     st.markdown('<div class="legend"><span><span class="tok-draft">text</span> guessed by the 0.5B, '
                 'accepted by the 3B</span><span>text written by the 3B itself</span>'
@@ -34,27 +48,30 @@ def page_spec():
     if st.button("▶ Generate", type="primary", key="go_spec"):
         m = models_or_stop()
         from bench import encode_prompt
-        from specdec import FixedGamma, speculative_generate
+        from specdec import FixedGamma, GammaController, speculative_generate
         ids = encode_prompt(m["tok"], p["text"])
+        c = m["c_fast"] if fast else m["c"]
+        controller = GammaController(c=c) if g == "adaptive" else FixedGamma(g)
         stats_box, box = st.empty(), st.empty()
         view = LiveView(m["tok"], box, stats_box, show_rej, "spec")
-        out, stats = speculative_generate(m["target"], m["draft"], ids, p["max_new"], FixedGamma(g), p["temp"],
-                                          m["eos"], p["seed"], on_round=view.hook)
+        out, stats = speculative_generate(m["target"], m["draft_fast"] if fast else m["draft"], ids, p["max_new"],
+                                          controller, p["temp"], m["eos"], p["seed"], on_round=view.hook)
         view.draw()
         stats_box.empty()
-        st.session_state.spec_run = {"key": run_key(p), "gamma": g, "ids": out, "tps": stats.tokens_per_s,
+        st.session_state.spec_run = {"key": run_key(p), "config": config, "ids": out, "tps": stats.tokens_per_s,
                                      "seconds": stats.seconds, "passes": stats.target_passes,
-                                     "alpha": stats.alpha, "from_draft": view.from_draft, "c": m["c"],
-                                     "html": view.html()}
+                                     "alpha": stats.alpha, "from_draft": view.from_draft, "c": c,
+                                     "mean_gamma": stats.mean_gamma, "html": view.html()}
 
     run = st.session_state.get("spec_run")
-    if not (run and run["key"] == run_key(p) and run["gamma"] == g):
+    if not (run and run["key"] == run_key(p) and run.get("config") == config):
         return
     if not st.session_state.get("go_spec"):
         st.markdown(run["html"], unsafe_allow_html=True)
     metric_row([("Speed", f"{run['tps']:.1f} tok/s", "Display time excluded"),
                 ("Time", f"{run['seconds']:.2f} s", None),
                 ("Acceptance rate α", f"{run['alpha']:.0%}", "Guesses kept ÷ guesses checked"),
+                ("Mean γ used", f"{run['mean_gamma']:.1f}", "Tokens drafted per round, averaged"),
                 ("3B forward passes", f"{run['passes']}", f"for {len(run['ids'])} tokens")])
 
     base = st.session_state.get("base_run")
@@ -88,8 +105,9 @@ def page_spec():
     else:
         st.info("At temperature 0.7 both methods sample, so the texts differ run to run, but speculative "
                 "decoding samples from exactly the same distribution as the base model.")
-    st.caption(f"Measured on {load_models()['gpu']} · fp16 · c (draft ÷ target step time) = {run['c']:.2f}. "
-               "A single run on a laptop is noisy; the Results page has the averaged numbers.")
+    draft_kind = "fast CUDA-graph draft" if run["config"][0] else "ordinary eager draft"
+    st.caption(f"Measured on {load_models()['gpu']} · fp16 · {draft_kind} · c (draft ÷ target step time) = "
+               f"{run['c']:.2f}. A single run on a laptop is noisy; the Results page has the averaged numbers.")
 
 
 page_spec()

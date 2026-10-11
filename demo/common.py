@@ -12,7 +12,8 @@ if ROOT not in sys.path:
 
 TASK_COLORS = {"code": "#2a78d6", "math": "#eb6834", "chat": "#1baf7a"}  # validated categorical slots 1-3
 TASK_NAMES = {"code": "Code", "math": "Maths", "chat": "Chat"}
-BEST_GAMMA = {"code": 1, "math": 2, "chat": 1}  # best fixed γ from the Phase 3 sweep
+BEST_GAMMA_EAGER = {"code": 1, "math": 2, "chat": 1}  # best fixed γ, eager draft (Phase 3 sweep, c ≈ 0.7)
+BEST_GAMMA_FAST = {"code": 8, "math": 8, "chat": 4}   # best fixed γ, CUDA-graph draft (Phase 5b, c ≈ 0.09)
 RESULTS = os.path.join(ROOT, "results")
 
 CSS = """
@@ -29,16 +30,19 @@ CSS = """
 @st.cache_resource(show_spinner="Loading Qwen2.5-3B and Qwen2.5-0.5B onto the GPU…")
 def load_models():
     from bench import DRAFT, TARGET, encode_prompt, eos_ids, load_pair
-    from specdec import FixedGamma, baseline_generate, measure_cost_ratio, speculative_generate
+    from specdec import FixedGamma, GraphDraft, baseline_generate, measure_cost_ratio, speculative_generate
     import torch
     tok, target, draft = load_pair(TARGET, DRAFT, "fp16")
+    fast = GraphDraft(draft, max_len=2048)  # static cache + CUDA-graph decode step (Phase 5b)
     eos = eos_ids(target)
     w = encode_prompt(tok, "Hello")
     baseline_generate(target, w, 16, 0.0, eos)
     speculative_generate(target, draft, w, 16, FixedGamma(2), 0.0, eos)
+    speculative_generate(target, fast, w, 16, FixedGamma(4), 0.0, eos)  # captures the graph
     c = measure_cost_ratio(target, draft, target.device)["c"]
-    return {"tok": tok, "target": target, "draft": draft, "eos": eos, "c": c,
-            "gpu": torch.cuda.get_device_name(0)}
+    c_fast = measure_cost_ratio(target, fast, target.device)["c"]
+    return {"tok": tok, "target": target, "draft": draft, "draft_fast": fast, "eos": eos, "c": c,
+            "c_fast": c_fast, "gpu": torch.cuda.get_device_name(0)}
 
 
 def models_or_stop():
